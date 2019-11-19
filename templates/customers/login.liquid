@@ -74,12 +74,15 @@
 
     {% if shop.checkout.guest_login %}
       <hr>
-      <h2>{{ 'customer.login.guest_title' | t }}</h2>
+    <div class="form-vertical continue-as-guest">
+      <div class="template_header">
+        <h1 class="title guest_continue_header">{{ 'customer.login.guest_title' | t }}</h1>
+      </div>
       {% form 'guest_login' %}
-        <input type="submit" class="btn" value="{{ 'customer.login.guest_continue' | t }}">
+        <input type="submit" class="btn guest_continue_btn" value="{{ 'customer.login.guest_continue' | t }}">
       {% endform %}
     {% endif %}
-
+    </div>
   </div>
 
   </div>

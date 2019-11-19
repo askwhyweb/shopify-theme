@@ -1,6 +1,6 @@
 <div class="container-fluid instagram_wrap">
   <div class="row">
-    <div class="container">
+    <div class="container morpas">
       {% if section.settings.title != blank %}
         <h2 class="section_title">{{ section.settings.title | escape }}</h2>
       {% endif %}
@@ -150,6 +150,7 @@
    ],
    "default":   "horizontal" 
 },
+
  {
         "type": "checkbox",
         "id": "data_loop",
@@ -181,4 +182,123 @@
 {% endschema %}
 <style>
   .owl-item .large--one-quarter{width:auto}
+  .container.morpas {
+    padding: 0 40px;
+}
+  {% assign bottom = false %}
+  {% comment %}
+  {% if section.settings.arrow_position == 'left_and_right' or settings.arrow_style == 'Left-Right' %}
+    {% assign bottom = false %}
+  {% else if section.settings.arrow_position == 'bottom' or settings.arrow_style == 'Bottom-Centered' %}
+    {% assign bottom = true %}
+  {% else if section.settings.arrow_position == 'default' %}
+          {% if settings.arrow_style == 'Bottom-Centered' %}
+            {% assign bottom = true %}
+          {% else if settings.arrow_style == 'Left-Right' %}
+            {% assign bottom = false %}
+          {% endif %}
+  {% endif %}
+  {% endcomment %}
+  {% if settings.arrow_style == 'Bottom-Centered' %}
+    {% assign bottom = true %}
+  {% else if settings.arrow_style == 'Left-Right' %}
+    {% assign bottom = false %}
+  {% endif %}
+
+  {% if bottom == false %}
+      @media screen and (min-width: 992px) {
+          .instashow-gallery-control-arrow-previous {
+              left: -2% !important;
+          }
+
+          .instashow-gallery-control-arrow-next {
+              right: -2% !important;
+          }
+      }
+
+      @media screen and (min-width: 1288px) {
+          .instashow-gallery-control-arrow-previous {
+              left: -3% !important;
+          }
+
+          .instashow-gallery-control-arrow-next {
+              right: -3% !important;
+          }
+      }
+
+      @media screen and (min-width: 1600px) {
+          .instashow-gallery-control-arrow-previous {
+              left: -4% !important;
+          }
+
+          .instashow-gallery-control-arrow-next {
+              right: -4% !important;
+          }
+      }
+  {% endif %}
+
+  {% if bottom == true and section.settings.data_direction == 'horizontal' %}
+  .instashow-gallery-control-arrow-previous {
+      top: auto;
+      bottom: -69px;
+      left: 48% !important;
+  }
+
+  .instashow-gallery-control-arrow-next {
+      top: auto;
+      bottom: -69px;
+      right: 48% !important;
+  }
+
+  @media screen and (max-width: 1268px) {
+      .instashow-gallery-control-arrow-previous {
+          left: 47% !important;
+      }
+
+      .instashow-gallery-control-arrow-next {
+          right: 47% !important;
+      }
+  }
+
+  @media screen and (max-width: 900px) {
+      .instashow-gallery-control-arrow-previous {
+          left: 46% !important;
+      }
+
+      .instashow-gallery-control-arrow-next {
+          right: 46% !important;
+      }
+  }
+  @media screen and (max-width: 620px) {
+      .instashow-gallery-control-arrow-previous {
+          left: 45% !important;
+      }
+
+      .instashow-gallery-control-arrow-next {
+          right: 45% !important;
+      }
+  }
+  @media screen and (max-width: 480px) {
+      .instashow-gallery-control-arrow-previous {
+          left: 43% !important;
+      }
+
+      .instashow-gallery-control-arrow-next {
+          right: 43% !important;
+      }
+  }
+
+  @media screen and (max-width: 360px) {
+      .instashow-gallery-control-arrow-previous {
+          left: 41% !important;
+      }
+
+      .instashow-gallery-control-arrow-next {
+          right: 41% !important;
+      }
+  }
+  {% endif %}
+  div#instafeed {
+    padding-bottom: 20px;
+}
 </style>

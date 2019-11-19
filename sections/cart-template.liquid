@@ -1,43 +1,51 @@
-<style> 
-
-
+<style>
+.search_panel {
+    display: none;
+}
+.search_panel.searchdown {
+    display: none !important;
+}
+  .search {
+    display: none;
+}
 .btn.btn--secondary {
-    background-color: {{settings.color_secondary }} !important;
-    color:{{ section.settings.sec_btn_font }} !important;
-}  
+    background-color:{{settings.con_btn_bg}}!important;
+    color:{{settings.con_btn_font }}!important;
+}
 
 .btn.btn--secondary:hover
 {
-  color:{{ section.settings.sec_bnt_font_hover }} !important;
-}  
-  
+  color:{{settings.con_bnt_font_hover }}!important;
+   background-color:{{settings.con_btn_bg_hover }}!important;
+}
+
 .cart__row__topreasons  {padding:0;}
   .menu_bar {
-   
+
     display: none;
 }
-  
+
   {% if settings.enable_sticky_bar%}
-  
- 
+
+
   {% else %}
- 
- 
+
+
    {% endif %}
 /*   .cart, header.header.shrink .cart2 {
-    
+
     display: none ;
 } */
   button#paypal-express-button{display:inline-block;}
-  @media screen and (max-width: 992px){ 
+  @media screen and (max-width: 992px){
   .header-space {
     padding-top: 80px;
 }
   }
-  
-  @media screen and (max-width: 767px){ 
+
+  @media screen and (max-width: 767px){
     .shrink .logo {
-    margin-top: 9px!important;
+    margin-top: 8px !important;
 }
     .mhid{display:none}
     td.text-right.cart-tot {
@@ -49,12 +57,12 @@
 }
     .cart_flex .text-right{text-align:center !important;margin-bottom: 4px; }
   }
- 
+
   button#paypal-express-button {
     border-radius:0!important;
     width: auto;
 }
-  
+
 .numberinc input {
     max-width: 40px;
     text-align: center;
@@ -75,17 +83,17 @@
     margin-top: 0;
     margin-bottom: 0;
   }
-  
+
   @media screen and (max-width: 992px)
     {
            .esimater {
     font-size: 14px;
 }
       .additional-checkout-button+.additional-checkout-button {
- 
+
     margin-bottom: 10px;
 }
-      
+
       .additional-checkout-button--paypal {
     vertical-align: top;
     line-height: 0 !important;
@@ -119,7 +127,7 @@
   .paypal-button.paypal-button-shape-rect {
     border-radius: 0;
 }
-  .additional-checkout-button.additional-checkout-button--google-pay { 
+  .additional-checkout-button.additional-checkout-button--google-pay {
     display: inline-block!important;
 }
   .cart_flex .additional-checkout-button.additional-checkout-button--google-pay {
@@ -128,19 +136,19 @@
    {% if settings.enable_sticky_bar%}
   .fix-cart-header{top:120px}
   .morespace .fix-cart-header{top:155px}
-  
+
   {% else %}
   .fix-cart-header {
     top: 72px;
 }
     .morespace .fix-cart-header{top:110px}
   {% endif %}
-  
+
   @media only screen and (max-width: 992px) {
     {% if settings.enable_sticky_bar%}
   .fix-cart-header{top:90px}
   .morespace .fix-cart-header{top:125px}
-  
+
   {% else %}
   .fix-cart-header {
     top: 42px;
@@ -150,13 +158,10 @@
   }
   .middle_bar .container {
     position: relative;
-    height: initial!important;
+
 }
   @media only screen and (max-width: 767px)
     {
-.logo {
-    margin-top: 0px!important;
-}
       .menu-btn {
     opacity: 0;
 }
@@ -164,6 +169,7 @@
   div#recently-viewed-container {
     padding-bottom: 40px;
 }
+  .additional-checkout-button{border-radius:0!important;}
 </style>
 
 <div class="container header-space">
@@ -173,21 +179,17 @@
         <thead class="cart__row cart__header-labels">
           <tr class="  ">
             <th colspan="5" class="checkout--row">
-<!--               {% if additional_checkout_buttons and settings.hide_additional == false %}
-              <div class="additional-checkout-buttons text-right medium-down--hide">
-                {{ content_for_additional_checkout_buttons }}
-                <span style="vertical-align: top; font-weight: 700;font-size: 20px;">&nbsp;or&nbsp;</span>
-              </div>
-              {% endif %} -->
-              
+
+
+
               {% include "cart-checkout-icons" %}
-              
+
               <button type="submit" name="checkout" class="btn right Checkout ">
                 <img src="{{ 'checkout-button-icon.png' | asset_url }}" alt="{{ shop.name }}" itemprop="logo" class="no-border ratina-img addIcon" />
                 <span id="CheckoutText">{{ 'cart.general.checkout' | t }}</span>
               </button>
               {% if settings.paypalbutton %}
-                {% if additional_checkout_buttons %}
+                {% if additional_checkout_buttons and settings.cart_disable_all_buttons == false %}
                 <span class="hide-on-desktop" style="vertical-align: top; line-height:42px; font-weight: 700;font-size: 20px;">&nbsp;or&nbsp;</span>
                 <span class="additional-checkout-buttons text-right right">
                   {{ content_for_additional_checkout_buttons }}
@@ -198,11 +200,11 @@
             </th>
           </tr>
           <tr class="titlewithbg">
-            <th class="text-center product-image">Product</th>
-            <th class="text-left">Product Description</th> <!-- medium-down--hide -->
-            <th class="text-center cart-qty">Quantity</th>
-            <th class="text-left medium-down--hide">Price</th>
-            <th class="text-right cart-tot">Total</th>
+            <th class="text-center product-image">{{ 'cart.general.product' | t }}</th>
+            <th class="text-left">{{ 'cart.general.description' | t }}</th> <!-- medium-down--hide -->
+            <th class="text-center cart-qty">{{ 'cart.general.quantity' | t }}</th>
+            <th class="text-left medium-down--hide">{{ 'cart.general.price' | t }}</th>
+            <th class="text-right cart-tot">{{ 'cart.general.total' | t }}</th>
           </tr>
         </thead>
         <tbody>
@@ -211,6 +213,7 @@
           {% for item in cart.items %}
           {% assign limited_qty = 0 %}
           {% for tag in item.product.tags %}
+              {% assign tag = tag | downcase %}
           	{% if tag contains "limited-quantity-" %}{% capture limited_qty %}{{ tag | replace: "limited-quantity-","" }}{% endcapture %}{% endif %}
           	{% if tag contains "estimateend-" %}{% capture estimateStartDateTmp %}{{ tag | replace: "estimateend-","" }}{% endcapture %}{% endif %}
           	{% assign estimateStartDateTmp = estimateStartDateTmp | plus: 0 %}
@@ -236,10 +239,10 @@
                {% for option_title in item.product.options %}
               <br>
                      {% unless option_title == "mlveda_country" %}
-              <small {% if hide_default_title %} class="hidden"{% endif %}>{{ option_title }} : {{item.variant.options[forloop.index0] }}</small> 
+              <small {% if hide_default_title %} class="hidden"{% endif %}>{{ option_title }} : {{item.variant.options[forloop.index0] }}</small>
                      {% endunless %}
  {% endfor %}
-            
+
 
               {% if settings.cart_vendor_enable %}
               <p>{{ item.vendor }}</p>
@@ -249,7 +252,7 @@
               {% for p in item.properties %}
               {% unless p.last == blank %}
               {{ p.first }}:
-             
+
               {% if p.last contains '/uploads/' %}
               <a href="{{ p.last }}">{{ p.last | split: '/' | last }}</a>
               {% else %}
@@ -261,12 +264,12 @@
               {% endif %}
             </td>
             <td class="text-center cart-qty" data-label="{{ 'cart.label.quantity' | t }}">
-               
+
               <div class="numberinc">
-                    <span class="icon icon-minus"></span> <!--fa fa-minus -->
+                    <span class="sho shoptimized-893"></span> <!--fa fa-minus -->
                   <input type="text" attr-id="{{ item.id }}"  name="updates[{{ item.id }}]" id="updates_{{ item.id }}" value="{{ item.quantity }}">
-                  <div class="update_price" style="display:none;">{{item.price | money}}</div>	
-                  <span class="icon icon-plus"></span>
+                  <div class="update_price" style="display:none;">{{item.price | money}}</div>
+                  <span class="sho shoptimized-883"></span>
                     </div>
               <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" class="cart__remove">
                 <small>{{ 'cart.general.remove' | t }}</small>
@@ -290,15 +293,15 @@
                 {% if settings.cart_timer_enable %}
                   <p class="cart-timer">
                     <span class="cart-timer--text">{{ settings.cart_timer_title }}</span>
-                    <span id="cartTimer" class="cart-timer--time"></span> minutes!
+                    <span id="cartTimer" class="cart-timer--time"></span> {{ 'cart.general.minutes' | t }}
                   </p>
                 {% endif %}
-                
+
                 {% capture cartsubtotal %}{{ 'cart.general.subtotal' | t }}{% endcapture %}
                 {% if settings.enable_cartstrip_text %}
                   <div class="pull-right cart-subtotal-bottom common_shipping_text"></div>
                 {% endif %}
-                
+
                 <span class="pull-right cart-total-bottom">{{ 'cart.general.total' | t }}: <span class="subtotal-price"><span class="money">{{ cart.total_price | money }}</span></span></span>
               </div>
             </td>
@@ -307,7 +310,7 @@
       </table>
        {% if settings.show_multiple_currencies %}
       <div class="currencymsg">
-    
+
         <h5>{{settings.curreny_notice_1}} {{shop.currency}} {{settings.curreny_notice_2}} <span class="cangecurrency">USD</span>  <span class="cangecurrencymobile">USD</span> {{settings.curreny_notice_3}} {{shop.currency}} {{settings.curreny_notice_4}}</h5>
     </div>
       {% endif %}
@@ -319,12 +322,17 @@
             <span class="cart-subtotal__savings"><em>{{ 'cart.general.savings_html' | t: price: savings }}</em></span>
           </p>
           {% endif %}
+           {% if settings.showdiscountbox %}
+          <p class="discuptitle">{{ 'cart.general.couponappliedheading' | t }}</p>
+           <input type="text" name="discount" placeholder="{{ 'cart.general.placeholder' | t }}">
+           <p class="discup">{{ 'cart.general.couponappliedtext' | t }}</p>
+           {% endif %}
           <p>{{ 'cart.general.shipping_at_checkout' | t }}</p>
-          {% if settings.cartcustom_text != ''%}
-          <p style="font-weight:bold;color:red"> Use Code {{settings.cartcustom_text}} to save {{settings.percentage}} <span id="DCTime">loading..</span>  only!</p>
+          {% if settings.cartcustom_text_visible == true %}
+            <p style="font-weight:bold;color:red"> Use Code {{settings.cartcustom_text}} to save {{settings.percentage}} <span id="DCTime">loading..</span>  only!</p>
           {% endif %}
            {% if settings.paypalbutton %}
-          {% if additional_checkout_buttons %}
+          {% if additional_checkout_buttons and settings.cart_disable_all_buttons == false %}
             <div class="additional-checkout-buttons text-right">
               {{ content_for_additional_checkout_buttons }}
               <span style="vertical-align: top; font-weight: 700;font-size: 20px;">&nbsp;or&nbsp;</span>
@@ -348,7 +356,7 @@
             </div>
           {% endif %}
         </div>
-        
+
         {% if settings.cart_notes_enable or settings.cart_topreasons_display %}
           <div class="grid__item one-half medium-down--one-whole cart-reason">
             {% if settings.cart_notes_enable %}
@@ -361,7 +369,7 @@
           </div>
         {% endif %}
       </div>
-      
+
       {% if settings.cart_help %}
       	<hr />
         <div class="cart__row__pagecontent">
@@ -378,10 +386,10 @@
               {% include 'product-grid-item' with type %}
             {% endfor %}
           </div>
-        </div> 
+        </div>
       {% endif %}
     </form>
-  
+
   {% if settings.show_recent_products %}
 <!-- <hr class="recently--viewed-hr" /> -->
 {% include 'recently-viewed' %}
@@ -409,7 +417,7 @@
           <a href="/collections/all" class="btn btn-default btn-large">{{ 'cart.general.continue_browsing_html' | t }}</a>
         </div>
       </div>
-    </div> 
+    </div>
     <div id="overlay-popup1"></div>
     <script>
       $('.close-cart-empty').click(function(){
@@ -431,41 +439,8 @@
 </script>
 
 
-{% schema %}
-
-{
-  "name": "Cart Settings",
-  "settings": [
-    {
-      "type": "color",
-      "id": "sec_btn_bg",
-      "label": "Secondary cart button background",
-      "default": "#6e797a"
-    },
-    {
-      "type": "color",
-      "id": "sec_btn_font",
-      "label": "Secondary cart button font",
-      "default": "#6e797a"
-    },
-	{
-      "type": "color",
-      "id": "sec_bnt_font_hover",
-      "label": "Secondary cart button font on mouse hover",
-      "default": "#6e797a"
-    }
 
 
-  ] 
-}
-{% endschema %}
-
-
-{% stylesheet %}
-{% endstylesheet %}
-
-{% javascript %}
-{% endjavascript %}
 
  <script>
     jQuery('[max]').change(function() {
@@ -492,13 +467,13 @@
 
 
 
-  $(".numberinc .icon").on("click", function() {
+  $(".numberinc .sho").on("click", function() {
 
     var $button = $(this);
     var oldValue = $button.parent('.numberinc').find("input").val();
-    
 
-    if ($button.hasClass('icon-plus')) {
+
+    if ($button.hasClass('shoptimized-883')) {
       var newVal = parseFloat(oldValue) + 1;
     } else {
      // Don't allow decrementing below zero
@@ -512,35 +487,35 @@
     $button.parent().find("input").val(newVal);
 
   });
-  
+
   })();
-  
-     $(document).ready(function(){    
+
+     $(document).ready(function(){
         var cun = '{{shop.currency}}';
     $('#currencies').on('change', function() {
       var cun1 = this.value;
-   
+
      if ( cun == cun1 )
       {
-            
+
         $('.currencymsg h5').hide();
       }
-       
+
       else {$('.currencymsg h5').show();}
   $("span.cangecurrency").html(this.value);
 });
        var cunsel = $("#currencies").val();
-       
-        
+
+
      if ( cun == cunsel )
       {
-            
+
         $('.currencymsg h5').hide();
       }
-       
+
       else {$('.currencymsg h5').show();}
        $("span.cangecurrency").html(cunsel);
-       
+
         $('.mobile-currencies #currencies').on('change', function() {
       if (this.value == 'USD')
       {
@@ -548,77 +523,95 @@
       }
       else {$('.currencymsg').show();}
   $("span.cangecurrencymobile").html(this.value);
-          
+
           var cunse2 = $(".mobile-currencies #currencies").val();
-        
-        
+
+
      if ( cun == cunse2 )
       {
-            
+
         $('.currencymsg h5').hide();
       }
-       
+
       else {$('.currencymsg h5').show();}
        $("span.cangecurrencymobile").html(cunse2);
 });
-       
-   
+
+
    function addItem(form_id) {
-      $.ajax({ 
+      $.ajax({
     type: 'POST',
     url: '/cart/update.js',
+
     data:  $('#'+form_id).serialize(),
-    async: false, 
-    cache: false, 
+    async: true,
+
+
+    cache: false,
     dataType: 'json',
     success: thisGetUpdatedCart,
     error: addToCartFail
   });
-     
-     
+
+
 
    }
-   
-   
-    $(".numberinc .icon").on('click', function (e) { 
-      e.preventDefault();     
-      var id=$(this).parents('form').attr('id');    
+
+
+    $(".numberinc .sho").on('click', function (e) {
+      e.preventDefault();
+      var id=$(this).parents('form').attr('id');
       addItem(id);
-     
-   });   
-       
-        $(".numberinc input").on('keyup', function (e) { 
-        e.preventDefault();     
+
+   });
+
+        $(".numberinc input").on('keyup', function (e) {
+        e.preventDefault();
+        if($(this).val() == '' || parseInt($(this).val()) == 0)
+          $(this).val(1);
         var id=$(this).parents('form').attr('id');
         addItem(id);
    });
-    
-  
+
+      $(".numberinc input").on('keypress', function (e) {
+        e = (e) ? e : window.event;
+        var charCode = (e.which) ? e.which : e.keyCode;
+        console.log(charCode);
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        if(parseInt($(this).val()) == 0)
+          $(this).val(1);
+        //var id=$(this).parents('form').attr('id');
+        //addItem(id);
+   });
+
+
 function addToCartFail(jqXHR, textStatus, errorThrown){
 var response = $.parseJSON(jqXHR.responseText);
-  console.error('PROBLEM ADDING TO CART!', response.description);  
+  console.error('PROBLEM ADDING TO CART!', response.description);
   $('#add-to-cart-msg').addClass('error').text(response.description);
 }
       function thisGetUpdatedCart(cart) {
-        
+
         var moneyFormat = "{{ shop.money_format }}";
         var cart_count = cart.item_count;
         $.each(cart, function(key, value) {
            if (key === 'items') {
         console.log(key);
          if (value.length) {
-          var getitem_price; 
-          $.each(value, function(i, item) {           
+          var getitem_price;
+          $.each(value, function(i, item) {
           getitem_price = (item.line_price);
-           
+
              console.log("price "+i+" "+getitem_price);
               var itemprice = $(".amount.price-"+i).html("<span class='money'>" + Shopify.formatMoney(item.line_price, moneyFormat ) + "</span>");
-            
-          
+
+
          var monetizeitemprice = $(".subtotal-price").html("<span class='money'>" + Shopify.formatMoney(cart.original_total_price, moneyFormat) + "</span>");
-           
+
             //Currency.convertAll({{shop.currency}}, jQuery('[name=currencies]').val());
-            // jQuery('.selected-currency').text(Currency.currentCurrency); 
+            // jQuery('.selected-currency').text(Currency.currentCurrency);
             var cookieCurrency = Currency.cookie.read();
             var currency ='{{shop.currency}}';
              Currency.convertAll(currency, cookieCurrency);
@@ -626,11 +619,11 @@ var response = $.parseJSON(jqXHR.responseText);
            jQuery('[name=currencies]').val($.cookie("currencynewcookie")).change();
           jQuery('.selectedvalue').text($.cookie("currencynewcookie"));
          }
-          
-            
+
+
                                                      })}
            }
-        })  
+        })
 }
 })
 </script>

@@ -12,7 +12,7 @@
         {% if linklists[grand_child_list_handle] and linklists[grand_child_list_handle].links.size > 0 %}
          <li class="site-nav--has-dropdown menu-dropdown-icon">
             <a href="{{ child_link.url }}" class="site-nav__linkk">
-           
+
           {{ child_link.title  }}
            </a>
           <ul class="site-nav__dropdown normal-sub-sub slides">
@@ -32,7 +32,7 @@
           </a>
         </li>
         {% endif %}
-        {% endfor %}        
+        {% endfor %}
       </ul>
     </li>
     {% else %}
@@ -42,7 +42,7 @@
     {% endif %}
     {% endfor %}
 
- 
+
 {% if settings.megamenu_custom_link_enable %}
   {% assign customLinkHTML = "" %}
   {% for i in (1..8) %}
@@ -74,7 +74,7 @@
         {% assign submenu_heading = 'megamenu_' | append:i | append:"_submenu_" | append:j | append:"_heading"  %}
         {% assign submenu_menu = 'megamenu_' | append:i | append:"_submenu_" | append:j %}
         {% if settings[submenu_menu] != "" %}
-          {% assign totalEnableValidate = totalEnableValidate | plus: 1 %}	
+          {% assign totalEnableValidate = totalEnableValidate | plus: 1 %}
         {% endif %}
       {% endfor %}
       {% assign megamenuwidthclass = 'widthfull' %}
@@ -95,21 +95,22 @@
       {% else %}
         {% assign menuprodlimit = 2 %}
       {% endif %}
-      <li aria-haspopup="true" id="li-main-for-{{ i }}">
+      <li aria-haspopup="true" id="li-main-for-{{ i }}" class="mhdp">
         <a class="menu-open" href="{% if default_collection != '' and settings.megamenu_default_link %}/collections/{{ collections[settings[default_collection]].handle }}{% else %}javascript:void(0);{% endif %}">
           {{ settings[text] }}
           <span class="fa fa-angle-down" id="arrow-for-{{ i }}"></span>
         </a>
-        <ul id="menu-for-{{ i }}">
+        <ul class="menu-for" id="menu-for-{{ i }}">
           <div class="mega_Wrap clearfix">
             <div class="  {% if settings[default_collection] != "" %}  {% if menuprodlimit == 4 %} col-md-4 {% elsif menuprodlimit == 3%} col-md-5  {% else %}col-md-7{% endif %} {% else %} noborderr{% endif %} equal-line mega_left_bar">
               <div class="row">
-                <div class="menu-hei"> 
+                <div class="menu-hei">
                   {% for j in (1..9) %}
                     <div class="{% if settings[default_collection] != "" %}  {% if menuprodlimit == 4 %} col-md-8 {% elsif menuprodlimit == 3%} col-md-6 {%else%}col-md-4{% endif %} {% else %}col-md-3{% endif %}">
                       <div class="media">
                         {% assign submenu_heading = 'megamenu_' | append:i | append:"_submenu_" | append:j | append:"_heading"  %}
-                        {% assign submenu_link = 'megamenu_' | append:i | append:"_submenu_" | append:j | append:""  %}  
+                        {% assign submenu_heading_link = 'megamenu_' | append:i | append:"_submenu_" | append:j | append:"_heading_link"  %}
+                        {% assign submenu_link = 'megamenu_' | append:i | append:"_submenu_" | append:j | append:""  %}
                         {% assign submenu_menu = 'megamenu_' | append:i | append:"_submenu_" | append:j %}
                         {% if settings[submenu_menu] != "" %}
                           {% assign totalEnable = totalEnable | plus: 1 %}
@@ -117,8 +118,8 @@
                             {% if settings[enable_icon] %}
                               {% capture icon_c %}m_{{ i }}_s_{{ j }}_i.png{% endcapture %}
                               <div class="media-left">
-                                <img src="{{ 'transparent.png' | asset_url }}" 
-                                     
+                                <img src="{{ 'transparent.png' | asset_url }}"
+
                                      data-src="{{ icon_c | asset_img_url: '40x' }}"
  data-widths="[540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048]"
  data-aspectratio="{{ icon_c | asset_img_url: '40x' }}"
@@ -129,10 +130,10 @@
                             {% endif %}
                           {% endif %}
                           <div class="media-body">
-                            <h4>{{ settings[submenu_heading] }}</h4>
+                            <h4><a href="{{ settings[submenu_heading_link] }}">{{ settings[submenu_heading] }}</a></h4>
                             <ul>
                               {% for link in linklists[settings[submenu_menu]].links %}
-                              <li><a href="{{ link.url }}">{{ link.title }}</a></li>    
+                              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
                               {% endfor %}
                             </ul>
                           </div>
@@ -162,12 +163,21 @@
             <div class="{% if settings[default_collection] != "" %} {% if menuprodlimit == 4 %} col-md-8 {% elsif menuprodlimit == 3%} col-md-7 {% else %}col-md-5 {% endif %} {% else  %}  {% endif %} equal-line">
               <div class="flex_item">
                 {% if settings[default_collection] != "" %}
+                  {%- capture products_grid -%}
+                    {%- if menuprodlimit == 4 -%}
+                      {%- if collections[settings[default_collection]].products.size == 3 %}col-md-4
+                      {%- else %}col-md-3
+                      {%- endif -%}
+                    {%- elsif menuprodlimit == 3 %}col-md-4
+                    {%- else %}col-md-6
+                    {%- endif -%}
+                  {%- endcapture -%}
                   {% for product in collections[settings[default_collection]].products limit:menuprodlimit %}
-                    <div class="{% if menuprodlimit == 4 %} col-md-3 {% elsif menuprodlimit == 3%} col-md-3 {% else %}col-md-6 {% endif %}">
+                    <div class="{{ products_grid }}">
                       {% include 'product-grid-navigation'%}
                     </div>
                   {% endfor %}
-                {% endif %} 
+                {% endif %}
               </div>
             </div>
           </div>
@@ -177,7 +187,7 @@
   {% endfor %}
 {% endif %}
 
- 
+
    {% for link in linklists[settings.header_linklist_2].links %}
     {% assign child_list_handle = link.title | handle %}
     {% if linklists[child_list_handle] and linklists[child_list_handle].links.size > 0 %}
@@ -192,7 +202,7 @@
         {% if linklists[grand_child_list_handle] and linklists[grand_child_list_handle].links.size > 0 %}
          <li class="site-nav--has-dropdown menu-dropdown-icon">
             <a href="{{ child_link.url }}" class="site-nav__linkk">
-           
+
           {{ child_link.title  }}
               <span class="fa fa-angle-right"></span>
            </a>
@@ -213,7 +223,7 @@
           </a>
         </li>
         {% endif %}
-        {% endfor %}        
+        {% endfor %}
       </ul>
     </li>
     {% else %}
@@ -226,7 +236,7 @@
   .menu > ul > li.slide > ul.normal-sub {
     width: 300px;
     left: auto;
-   
+
     visibility: visible;
     opacity: 1;
     z-index: 9;
@@ -236,11 +246,11 @@
   	opacity:0;
     z-index:-1;
     visibility:hidden;
-    
+
   }
   .menu > ul > li > ul > li.slide > ul.normal-sub-sub {
   	/*width: 300px;*/
-     
+
     visibility: visible;
     opacity: 1;
     z-index: 9;
@@ -269,5 +279,6 @@
   {% endif %}
   .menu li li a:before{display:none;}
   .menu-dropdown-icon > a:hover:before, .menu li > a:hover:before{left: 0; right: 0; text-decoration: none; z-index: 99;}
-  .menu-dropdown-icon.slide .menu-open:after{content:''; position:absolute; left:50%; transform:translateX(-50%) rotate(-45deg); bottom:-7px; z-index:9999; width:12px; height:12px; background:{{settings.megamenu_bg_color}}; border-top:2px solid {{settings.color_primary}}; border-right:2px solid {{settings.color_primary}};}
+  .menu-dropdown-icon .menu-open:after{content:''; opacity:0; position:absolute; left:50%; transform:translateX(-50%) rotate(-45deg); bottom:-7px; z-index:9999; width:12px; height:12px; background:{{settings.megamenu_bg_color}}; border-top:2px solid {{settings.color_primary}}; border-right:2px solid {{settings.color_primary}};}
+  .menu-dropdown-icon.slide .menu-open:after{content:''; opacity:1; transition:0.55s ease; position:absolute; left:50%; transform:translateX(-50%) rotate(-45deg); bottom:-7px; z-index:9999; width:12px; height:12px; background:{{settings.megamenu_bg_color}}; border-top:2px solid {{settings.color_primary}}; border-right:2px solid {{settings.color_primary}};}
 </style>

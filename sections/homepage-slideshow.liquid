@@ -23,8 +23,20 @@
               {% if block.settings.image == blank %}
               {{ 'lifestyle-1'  | placeholder_svg_tag: 'placeholder-svg' }}
               {%else%}
-              <img src="{{ block.settings.image | img_url: '2048x' }}" class="img-responsive lazy"  data-original="{{ product-block.featured_image | product_img_url: image_size }}" alt="{{ product-block.featured_image.alt }}" height="562" width="1410"> 
-              <div class='banner-text id-{{block.id}} v-{{ block.settings.heading_vertical_pos }}--h-{{ block.settings.horizontal_vertical_pos }}'>
+                {% if settings.lazyload %}
+                <img  src="{{ block.settings.image | img_url: '300x', format: 'pjpg'}}"
+                    data-src="{{ block.settings.image | img_url: '2048x', format: 'pjpg' }}"
+                    data-widths="[540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048]"
+                    data-aspectratio="{{ block.settings.image.aspect_ratio }}"
+                    data-sizes="auto"
+                    data-parent-fit="cover"
+                alt="{{ product.images.first.alt | escape }}" class="lazyload img-responsive lazy"    alt="{{ product-block.featured_image.alt }}" height="562" width="1410">
+              {% else %}
+                <img  src="{{ block.settings.image | img_url: '2048x', format: 'pjpg'}}"
+                      data-src="{{ block.settings.image | img_url: '2048x', format: 'pjpg' }}"
+                      alt="{{ product.images.first.alt | escape }}" class="lazyload img-responsive lazy"    alt="{{ product-block.featured_image.alt }}" height="562" width="1410">
+              {% endif %}
+                  <div class='banner-text id-{{block.id}} v-{{ block.settings.heading_vertical_pos }}--h-{{ block.settings.horizontal_vertical_pos }} talign-{{ block.settings.text_overlay_alignment }}'>
                 {% if block.settings.heading != blank %}
                   <h2>{{ block.settings.heading }}</h2>
                 {% else %}
@@ -85,9 +97,16 @@
   .banner-slider .banner-text h2{color:{{section.settings.headingcolor}};font-size:{{section.settings.headingfontsize}};font-weight:{{section.settings.headingfontweight}};}
   .banner-slider .banner-text p{color:{{section.settings.subheadingcolor}};font-size:{{section.settings.subheadingfontsize}};font-weight:{{section.settings.subheadingfontweight}};}
   .banner-slider .banner-text .btn-default{color:{{section.settings.buttontextcolor}}!important;background:{{section.settings.buttonbgcolor}}!important;border:none;font-size:{{section.settings.buttonfontsize}};font-weight:{{section.settings.buttonfontweight}};}
+
+  {% if section.settings.bottompadding %}
+  .banner-slider {
+    margin-bottom: 0;
+}
+   
+  {% endif %}
 </style>
 
-{% include 'deal-of-the-day' %}
+ 
 
 {% schema %}
 {
@@ -109,6 +128,11 @@
 "type": "checkbox",
 "id": "fullwidth",
 "label": "Make Slider Full Width" 
+},
+{
+"type": "checkbox",
+"id": "bottompadding",
+"label": "Disable Bottom Padding" 
 },
 
 {
@@ -286,6 +310,27 @@
 "type": "select",
 "id": "horizontal_vertical_pos",
 "label": "Horizontal Position",
+"options": [
+{
+"value": "left",
+"label": "Left"
+},
+{
+"value": "center",
+"label": "Center"
+},
+{
+"value": "right",
+"label": "Right"
+}
+],
+"default": "center"
+}
+,
+{
+"type": "select",
+"id": "text_overlay_alignment",
+"label": "Text overlays alignment",
 "options": [
 {
 "value": "left",

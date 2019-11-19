@@ -1,7 +1,15 @@
 <!-- /snippets/collection-sorting.liquid -->
  <div class="text-right">
-    Showing {{paginate.current_offset | plus:1}}-{%- if paginate.next -%}{{paginate.current_offset | plus:paginate.page_size}}{%- else -%}{{paginate.items}}{%- endif -%}{{' '}} of {{' '}}{{paginate.items}} results
+    {{ 'collections.sorting.showing' | t }} {{paginate.current_offset | plus:1}}-{%- if paginate.next -%}{{paginate.current_offset | plus:paginate.page_size}}{%- else -%}{{paginate.items}}{%- endif -%}{{' '}} {{ 'collections.sorting.of' | t }} {{' '}}{{paginate.items}} {{ 'collections.sorting.results' | t }}
   </div>
+<div class="collection-view" >
+  <button type="button" title="{{ 'collections.general.grid_view' | t }}" class="change-view{% unless template contains 'list' %} change-view--active{% endunless %}" data-view="grid">
+   <i class="fa fa-th" aria-hidden="true"></i>
+  </button>
+  <button type="button" title="{{ 'collections.general.list_view' | t }}" class="change-view{% if template contains 'list' %} change-view--active{% endif %}" data-view="list">
+  <i class="fa fa-list" aria-hidden="true"></i>
+  </button>
+</div>
 <div class="form-horizontal">
    
   {% if settings.collection_sort %}
@@ -39,20 +47,7 @@
   {% endif %}
 </div>
 
-<div class="collection-view" style="display: none;">
-  <button type="button" title="{{ 'collections.general.grid_view' | t }}" class="change-view{% unless template contains 'list' %} change-view--active{% endunless %}" data-view="grid">
-    <span class="icon-fallback-text">
-      <span class="icon icon-grid-view" aria-hidden="true"></span>
-      <span class="fallback-text">{{ 'collections.general.grid_view' | t }}</span>
-    </span>
-  </button>
-  <button type="button" title="{{ 'collections.general.list_view' | t }}" class="change-view{% if template contains 'list' %} change-view--active{% endif %}" data-view="list">
-    <span class="icon-fallback-text">
-      <span class="icon icon-list-view" aria-hidden="true"></span>
-      <span class="fallback-text">{{ 'collections.general.list_view' | t }}</span>
-    </span>
-  </button>
-</div>
+
 
 <script>
   Shopify.queryParams = {};
@@ -69,6 +64,7 @@
     $('#SortBy')
       .val('{{ collection.sort_by | default: collection.default_sort_by }}')
       .bind('change', function() {
+        //debugger;
         Shopify.queryParams.sort_by = jQuery(this).val();
         location.search = jQuery.param(Shopify.queryParams);
       }
@@ -87,7 +83,7 @@
   });
    $(document).ready(function () {
   var string1= window.location.href;
-string1 = string1.split('=')[1];
+  string1 = string1.split('=')[1];
      if (string1 == 'title-descending')
      {
       $("#fourm").addClass("active"); 

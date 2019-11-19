@@ -1,5 +1,4 @@
- 
-<div id="exit-popup" class="clock-popup exit-one mfp-hide">
+ <div id="exit-popup" class="clock-popup exit-one mfp-hide">
   <button title="Close (Esc)" type="button" class="mfp-close" id="mfp-closeid-exit"><span class="fa fa-times"></span></button>
   <div class="clock-popup-inner">
     <h2><span>{{settings.exitpopup_heading}}</span></h2>
@@ -9,37 +8,18 @@
     <form action="/cart" method="post" novalidate  >
       <input type="hidden" name="discount" value="{{settings.discountcode}}">    
       <div class="popup_newsletter">
-        <button class="btn btncookie" type="submit"  name="checkout">APPLY COUPON INSTANTLY</button>
+        <button class="btn btncookie" type="submit"  name="checkout">{{ 'general.exitpopup.apply' | t }}</button>
       </div></form>
     {% else%}
-    <a class="btn btncookie" type="submit"  href="/collections/all" name="checkout">SHOP NOW</a>
+    <a class="btn btncookie" type="submit"  href="/collections/all" name="checkout">{{ 'general.exitpopup.shop' | t }}</a>
     {% endif %}
    <p style="
     margin-top: 14px;
-">OR</p>
-    <p>enter promo code <span style="
+">{{ 'general.exitpopup.or' | t }}</p>
+    <p>{{ 'general.exitpopup.enter' | t }} <span style="
       color: #42c54f ;
       font-weight: bold;
       border-bottom: 2px dotted;
-      ">{{settings.discountcode}}</span> at the CHECKOUT</p>
+      ">{{settings.discountcode}}</span> {{ 'general.exitpopup.checkout' | t }}</p>
   </div>
 </div>
-
-<style>
-  span.flip-clock-divider.minutes .flip-clock-dot {
-    display: none;
-  }
-  .clock-popup.exit-one {
-    max-width: 480px;
-  }
-
-  .exit-one .clock-popup-inner h2 {
-    font-size: 82.16px;
-
-  }
-  
- #exit-popup .mfp-close{line-height:0 !important;display: block; text-align: center;}
- 
-  #exit-popup .mfp-close:hover{color:#000 !important; border-color:#000;}
-</style>
- 

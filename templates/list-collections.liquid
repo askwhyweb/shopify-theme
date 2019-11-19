@@ -1,12 +1,21 @@
-<div class="wrapper">
+<div class="container-fluid header-space">
+		<div class="row">
+			<div class="container">
+             
+			 
+			</div>
+		</div>
+	</div>
+ 
+	<div class="container collection_page">
   {% include 'breadcrumb' %}
   {% unless settings.collections_products %}
   	<div class="section-header">
       <p class="h1 section-header__left">{{ 'collections.general.title' | t }}</p>
     </div>
   {% endunless %}
-  {% for link in linklists.all-collections.links %}
-  	{% assign collection = link.object %}
+ {% for collection in collections %}
+  
   	{% if settings.collections_products %}
       {% unless collection.handle == 'frontpage' %}
         {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
@@ -15,18 +24,32 @@
           <div class="section-header__right">
             <a href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}">More {{ collection_title }} &rsaquo;</a>
           </div>
-        </div>
+        </div> 
 
-        <div class="grid-uniform">
-          {% for product in collection.products limit:4 %}
-            {% assign grid_item_width = 'large--one-fifth medium--one-half' %}
+        <div class="category_wrap ffa cearfix">
+                              <div class="grid-uniform">
+                                {% if settings.show_in_carousel %} 
+                                <div class="category_wrap homaa">
+                                   {% endif %} 
+          {% for product in collection.products limit:settings.collectionlistingcount %}
+                                 {% unless settings.show_in_carousel %} 
+            {% assign product_list_class = 'large--one-fifth medium--one-half' %}
+                               {% endunless%} 	
+                                  {% if settings.mobile_products_per_row == '2' %}
+                                  {% assign mobile_product_list_class = 'small--one-half' %}
+                                     {% endif %} 
+                                
             {% include 'product-grid-item' %}
           {% endfor %}
+                                  {% if settings.show_in_carousel %} 
+                                </div>
+                                    {% endif %} 
         </div>
-        {% unless forloop.last %}<hr>{% endunless %}
+      </div>
+        {% unless forloop.last %} {% endunless %}
       {% endunless %}
     {% else %}
-  	  {% unless collection.handle == 'frontpage' %}
+  	  
         <div class="grid__item large--one-quarter medium--one-half custom--width-one-half collection-list">
           <div class="grid__product-image text-center">
             <a href="{{ collection.url }}" class="grid__image">
@@ -44,7 +67,12 @@
             </p>
           </div>
         </div>
-  	  {% endunless %}
+  	  
+          {% cycle '','','','<div style="clear:both"></div>'%}
   	{% endif %}
+  
   {% endfor %}
 </div>
+<style>
+  
+</style>

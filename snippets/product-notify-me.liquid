@@ -1,3 +1,4 @@
+ 
 {% if settings.notify_me_form %}   
   <div class="notify_form notify-form-{{ product.id }}" id="notify-form-{{ product.id }}" {% if product.available %}style="display:none"{% endif %}>
     <p class="message"></p>
@@ -48,18 +49,22 @@ $('body').on('click', '[name="ftcn"]', function() {
  
  
 <style>
+  div#variantNotifyMe {
+    display: none!important;
+}
   .notlf, .flash--total-sold{display:none}
   .notify_email {
   width: 300px;
     /* margin: 10px 0px; */
     float: left;
-    padding: 7px 7px;
+    padding: 0px 7px;
+    height: 33px;
 }
   .container-fluid.fix-cart.cart-bar {
     display: none;
 }
    .notify_form input.action_button.btn {
-    height: 41px!important;
+    height: 33px!important;
 }
 </style>
 {% endunless %}{% endif %}

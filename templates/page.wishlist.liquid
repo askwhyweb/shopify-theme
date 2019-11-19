@@ -6,9 +6,9 @@
     <h1 class="wishlist-hero--title">{{ page.title }}</h1>
   </div>
   <!-- Product Tile Grid -->
-  <div class="wishlist-grid flex">
+  <div class="wishlist-grid flex" style="display: none">
     {% for product in collections.all.products %}
-      {% include 'product-tile' %}
+      {% include 'product-grid-item' %}
     {% endfor %}
     <div class="wishlist-grid--empty-list flex">
       <div class="empty-list--info">
@@ -19,8 +19,14 @@
   </div>
   <!-- Loader -->
   <div class="wishlist-loader">
-    <img class="wishlist-loader--image" src="{{ 'icn-wishlist.svg' | asset_url }}" alt="Wishlist loading">
-    <p class="wishlist-loader--text">Loading your customized wishlist...</p>
+     <p class="wishlist-loader--text">Loading your customized wishlist...</p>
   </div>
+
 </div>
 </div>
+<style>
+  html {
+    overflow-x: hidden;
+  }
+</style>
+

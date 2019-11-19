@@ -1,4 +1,4 @@
-<nav id="menu">
+<nav id="menu" style="display:none">
 
   <button id="mmmenu-close-button" type="button" class="ger icon-fallback-text">
     <span class="fa fa-times" aria-hidden="true"></span>
@@ -7,25 +7,45 @@
 
   <ul>
 
-    {% for link in linklists[settings.header_linklist_1].links %}
-    {% assign child_list_handle = link.title | handleize %}
-    {% if linklists[child_list_handle].links != blank %}
+      {% for link in linklists[settings.header_linklist_1].links %}
+    {% assign child_list_handle = link.title | handle %}
+    {% if linklists[child_list_handle] and linklists[child_list_handle].links.size > 0 %}
     <li>
-
-      <span> {{ link.title }}</span>
-
-
-
+    <span> 
+        {{ link.title }}
+    </span>
+        
       <ul>
-        {% for childlink in linklists[child_list_handle].links %}
-        <li{% if childlink.active %} {% endif %}>
-          <a href="{{ childlink.url }}">{{ childlink.title | escape }}</a>
+        {% for child_link in linklists[child_list_handle].links %}
+        {% assign grand_child_list_handle = child_link.title | handle %}
+        {% if linklists[grand_child_list_handle] and linklists[grand_child_list_handle].links.size > 0 %}
+         <li >
+             <span> 
+           
+          {{ child_link.title  }}
+           </span>
+          <ul>
+            {% for grand_child_link in linklists[grand_child_list_handle].links %}
+            <li>
+              <a href="{{ grand_child_link.url }}">
+              {{ grand_child_link.title }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
         </li>
-        {% endfor %}
+        {% else %}
+        <li>
+           <a href="{{child_link.url}}" >
+          {{ child_link.title  }}
+          </a>
+        </li>
+        {% endif %}
+        {% endfor %}        
       </ul>
     </li>
     {% else %}
-    <li {% if link.active %}class="site-nav--active"{% endif %}>
+ <li {% if link.active %}class="site-nav--active"{% endif %}>
       <a href="{{ link.url }}" class="site-nav__linkk">{{ link.title }}</a>
     </li>
     {% endif %}
@@ -116,26 +136,47 @@
     {% endif %}
 
 
-
-    {% for link in linklists[settings.header_linklist_2].links %}
-    {% assign child_list_handle = link.title | handleize %}
-    {% if linklists[child_list_handle].links != blank %}
+ 
+  
+      {% for link in linklists[settings.header_linklist_2].links %}
+    {% assign child_list_handle = link.title | handle %}
+    {% if linklists[child_list_handle] and linklists[child_list_handle].links.size > 0 %}
     <li>
-
-      <span> {{ link.title }}</span>
-
-
-
+    <span> 
+        {{ link.title }}
+    </span>
+        
       <ul>
-        {% for childlink in linklists[child_list_handle].links %}
-        <li{% if childlink.active %} {% endif %}>
-          <a href="{{ childlink.url }}">{{ childlink.title | escape }}</a>
+        {% for child_link in linklists[child_list_handle].links %}
+        {% assign grand_child_list_handle = child_link.title | handle %}
+        {% if linklists[grand_child_list_handle] and linklists[grand_child_list_handle].links.size > 0 %}
+         <li >
+             <span> 
+           
+          {{ child_link.title  }}
+           </span>
+          <ul>
+            {% for grand_child_link in linklists[grand_child_list_handle].links %}
+            <li>
+              <a href="{{ grand_child_link.url }}">
+              {{ grand_child_link.title }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
         </li>
-        {% endfor %}
+        {% else %}
+        <li>
+           <a href="{{child_link.url}}" >
+          {{ child_link.title  }}
+          </a>
+        </li>
+        {% endif %}
+        {% endfor %}        
       </ul>
     </li>
     {% else %}
-    <li {% if link.active %}class="site-nav--active"{% endif %}>
+ <li {% if link.active %}class="site-nav--active"{% endif %}>
       <a href="{{ link.url }}" class="site-nav__linkk">{{ link.title }}</a>
     </li>
     {% endif %}
@@ -153,6 +194,76 @@
           <li><a href="/account/logout">{{ 'customer.login.logout' | t }}</a></li>
           {% endif %}
     {% endif %}
-    
+        {% if settings.showinmobilemenu %}
+     {% capture codes %},USD,EUR,GBP,CAD,ARS,AUD,ILS,BBD,BDT,BSD,BHD,BRL,BOB,BND,BGN,MMK,KYD,CLP,CNY,COP,CRC,HRK,CZK,DKK,DOP,XCD,EGP,XPF,FJD,GHS,GTQ,GYD,GEL,HKD,HUF,ISK,INR,IDR,NIS,JMD,JPY,JOD,KZT,KES,KWD,LVL,LTL,MXN,MYR,MUR,MDL,MAD,MNT,MZN,ANG,NZD,NGN,NOK,OMR,PKR,PYG,PEN,PHP,PLN,QAR,RON,RUB,SAR,RSD,SCR,SGD,SYP,ZAR,KRW,LKR,SEK,CHF,TWD,THB,TZS,TTD,TRY,UAH,AED,UYU,VEB,VND,ZMK,{% endcapture %}
+  {% assign supported_codes = settings.supported_currencies | split: ' ' %}
+    <li class="bigwidth"> 
+      <span class="selected--currency-flag">
+                {% for code in supported_codes %}
+   
+          {% assign file_extensionn = 'svg' %}
+                           <img id="cunfla" src="{{ 'transparent.png' | asset_url | split:'?' | first }}"
+                                {% if code == 'ANG'%}
+                                                       data-src="{{ 'ad.svg' | asset_url | split:'?' | first  }}"
+ data-widths="[540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048]"
+ data-aspectratio="{{ 'ad.svg' | asset_url | split:'?' | first  }}"
+ data-sizes="auto"
+ data-parent-fit="contain"
+                                alt="{{ code }}" class="lazyload country--flag {{ code }}" 
+                                
+                                {% else %}
+                                data-src="{{ code  | slice: 0, 2 | handle | append: '.' | append: file_extensionn | asset_url  }}"
+ data-widths="[540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048]"
+ data-aspectratio="{{ code  | slice: 0, 2 | handle | append: '.' | append: file_extensionn | asset_url | split:'?' | first }}"
+ data-sizes="auto"
+ data-parent-fit="contain"
+                                alt="{{ code }}" class="lazyload country--flag {{ code }}" 
+                                
+                                {%endif%}
+                                />
+     
+  {% endfor %}
+      </span>
+       
+        <span class="selectedvalue"></span> 
+    <ul class="andree">
+    {% for code in supported_codes %}
+     
+    <li data-value="{{ code }}">   <a>{% assign file_extensionn = 'svg' %}
+                           <img id="cunfla" src="{{ 'transparent.png' | asset_url | split:'?' | first }}"
+                                {% if code == 'ANG'%}
+                                                       data-src="{{ 'ad.svg' | asset_url | split:'?' | first  }}"
+ data-widths="[540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048]"
+ data-aspectratio="{{ 'ad.svg' | asset_url | split:'?' | first  }}"
+ data-sizes="auto"
+ data-parent-fit="contain"
+                                alt="{{ code }}" class="lazyload country--flag {{ code }}" 
+                                
+                                {% else %}
+                                data-src="{{ code  | slice: 0, 2 | handle | append: '.' | append: file_extensionn | asset_url }}"
+ data-widths="[540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048]"
+ data-aspectratio="{{ code  | slice: 0, 2 | handle | append: '.' | append: file_extensionn | asset_url | split:'?' | first }}"
+ data-sizes="auto"
+ data-parent-fit="contain"
+                                alt="{{ code }}" class="lazyload country--flag {{ code }}" 
+                                
+                                {%endif%}
+                                /> {{ code }}</a></li>  
+  {% endfor %}
+    </ul>
+    </li>
+      {%endif%}
+    {% if settings.enable_header_contact %}
+     
+             <li class="center">
+              <p class="hsit">{{ settings.header_question_line }}</p>
+              <h5><a href="tel:{{ settings.header_phone }}">
+               
+             
+                {{ settings.header_phone }} </a></h5>
+              <p><strong>{{ settings.header_time }}</strong></p>
+                </li>
+           {% endif %}
+   {% include 'deal-of-the-day'%}
   </ul>
 </nav>

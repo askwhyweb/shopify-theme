@@ -7,7 +7,7 @@
     {% if settings.blog_newsletter %}
 <div class="blog-widget-wrapper blog-newslatter new-blog-newsletter">
   <h3>{{ 'blogs.sidebar.newsletter' | t }}</h3>
-  {% form 'customer' %}
+  {% form 'customer', id: null %}
   <input type="hidden" id="contact_tags" name="contact[tags]" value="prospect,newsletter,164"/>
   <div>
         <input required class="form-control" type="text" id="contact_email" name="contact[email]" placeholder="Your email address"/>

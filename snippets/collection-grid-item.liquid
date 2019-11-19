@@ -6,10 +6,10 @@
   {% assign collection_image = blank %}
 {% endif %}
 
-<div class="text-center">
+<div class="text-center grid__item">
   <a href="{% if collection.products == empty %}#{% else %}{{ collection.url }}{% endif %}" class="collection-grid-item__link">
     {% unless collection_image == blank %}
-      <img src="{{'blur.jpg' | asset_url }}"
+      <img src="{{'transparent.png' | asset_url }}"
             data-src="{{ collection_image | img_url: '1024x1024' }}"
  data-widths="[540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048]"
  data-aspectratio="{{ collection_image | img_url: '1024x1024' }}"
@@ -25,7 +25,7 @@
           {{ 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
         </div>
       {% else %}
-         <img src="{{'blur.jpg' | asset_url }}"
+         <img src="{{'transparent.png' | asset_url }}"
                data-src="{{ collection_image | img_url: '1024x1024' }}"
  data-widths="[540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048]"
  data-aspectratio="{{ collection_image | img_url: '1024x1024' }}"

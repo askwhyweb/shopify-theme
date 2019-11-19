@@ -7,7 +7,6 @@ var Shopify = Shopify || {};
 Shopify.optionsMap = {};
 
 Shopify.updateOptionsInSelector = function(selectorIndex) {
-  
   switch (selectorIndex) {
     case 0:
       var key = 'root';
@@ -18,32 +17,40 @@ Shopify.updateOptionsInSelector = function(selectorIndex) {
       var selector = jQuery('.single-option-selector:eq(1)');
       break;
     case 2:
-      var key = jQuery('.single-option-selector:eq(0)').val();  
+      var key = jQuery('.single-option-selector:eq(0)').val();
       key += ' / ' + jQuery('.single-option-selector:eq(1)').val();
       var selector = jQuery('.single-option-selector:eq(2)');
   }
-  
+
   var initialValue = selector.val();
-  selector.empty();    
+  selector.empty();
   var availableOptions = Shopify.optionsMap[key];
+    if(availableOptions)
+    {
   for (var i=0; i<availableOptions.length; i++) {
+
     var option = availableOptions[i];
     var newOption = jQuery('<option></option>').val(option).html(option);
     selector.append(newOption);
   }
+    }
+
   jQuery('.swatch[data-option-index="' + selectorIndex + '"] .swatch-element').each(function() {
     if (jQuery.inArray($(this).attr('data-value'), availableOptions) !== -1) {
-      //$(this).removeClass('soldout').show().find(':radio').removeAttr('disabled','disabled').removeAttr('checked');
+      $(this).removeClass('soldout').find(':radio').removeAttr('disabled','disabled').removeAttr('checked');
       $(this).removeClass('soldout').find(':radio').removeAttr('disabled','disabled').removeAttr('checked');
     } else {
-      //$(this).addClass('soldout').hide().find(':radio').removeAttr('checked').attr('disabled','disabled');
       $(this).addClass('soldout').find(':radio').removeAttr('checked').attr('disabled','disabled');
+      $(this).addClass('soldout').find(':radio').removeAttr('checked').removeAttr('disabled','disabled');
     }
   });
   if (jQuery.inArray(initialValue, availableOptions) !== -1) {
     selector.val(initialValue);
   }
   selector.trigger('click');
+  if (initialValue) {
+      initialValue = initialValue.replace(/"/g,'');
+  }
   var radioButton = $('.swatch[data-option-index="' + selectorIndex + '"] :radio[value="' + initialValue +'"]');
   if (radioButton.prop('checked') === false) {
     radioButton.attr("checked", "true").change();
@@ -89,22 +96,24 @@ Shopify.linkOptionSelectors = function(product) {
   jQuery(".single-option-selector:eq(1)").change(function() {
     if (product.options.length === 3) Shopify.updateOptionsInSelector(2);
     return true;
-  });  
+  });
 };
  
 {% if product.available and product.options.size > 1 %}
-  var $addToCartForm = $('form[action="/cart/add"]');
-  if (window.MutationObserver && $addToCartForm.length) {
-    if (typeof observer === 'object' && typeof observer.disconnect === 'function') {
-      observer.disconnect();
-    }
-    var config = { childList: true, subtree: true };
-    var observer = new MutationObserver(function() {      
-      Shopify.linkOptionSelectors({{ product | json }});
-      observer.disconnect();
-    });  
-    observer.observe($addToCartForm[0], config);
-  }
+    jQuery(document).ready(function () {
+        var $addToCartForm = $('form[action="/cart/add"]');
+        if (window.MutationObserver && $addToCartForm.length) {
+            if (typeof observer === 'object' && typeof observer.disconnect === 'function') {
+                observer.disconnect();
+            }
+            var config = { childList: true, subtree: true };
+            var observer = new MutationObserver(function() {
+                Shopify.linkOptionSelectors({{ product | json }});
+                observer.disconnect();
+            });
+            observer.observe($addToCartForm[0], config);
+        }
+    })
+
 {% endif %}
 </script>
-  

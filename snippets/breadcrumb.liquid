@@ -38,12 +38,45 @@
      <span>/</span>
       <span class="page-title">{{ current_tags.first }}</span>
     {% else %}
+  <span class="urltag">
+    <span>/</span>
+    <span class="page-title"><a href=""></a></span>
+  
+  </span>
      <span>/</span>
       <span class="page-title">{{ collection.title }}</span>
     {% endif %}
-  {% else %}
-   <span>/</span>
-    <span class="page-title">{{ page_title }}</span>
+  {% elsif template contains "search" %}
+  <span>/</span>
+   <span>SEARCH RESULTS FOR</span>
+   
+    <span class="page-title page-breadcumb">"{{ page_title }}"</span>
+    {% else %}
+       <span>/</span>
+    <span class="page-title page-breadcumb">{{ page_title }}</span>
   {% endif %}
 </nav>
 {% endunless %}
+
+<script>
+  $( document ).ready(function() {
+    var hash;
+    var urlTag = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+     for(var i = 0; i < urlTag.length; i++)
+    {
+        hash = urlTag[i].split('=');
+    }
+    
+    if(hash[0] == 'custom'){
+      var urlTag_url = hash[1].toString().replace('%20', '-');
+      urlTag_url =urlTag_url.toLowerCase();
+      $(".urltag .page-title a").attr("href", "/pages/"+urlTag_url);
+      var urlTag_breadcrum = hash[1].toString().replace('%20', ' ');
+      $(".urltag .page-title a").text(urlTag_breadcrum);
+     
+    }else{
+    	$(".urltag").hide();
+    }
+    
+    });
+</script>

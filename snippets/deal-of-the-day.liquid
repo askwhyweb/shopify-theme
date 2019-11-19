@@ -1,19 +1,23 @@
 {% if settings.deal_of_the_day_enabled %}
-	<div data-section-id="deal-od-the-day" data-section-type="slider-section" class='wrapper deal-of-the-day'>
-      {% if  settings.deal_of_the_day_text != blank %}
-       <h2 class="section_title"><a href="/collections/square-images">{{ settings.deal_of_the_day_text | escape }}</a></h2>
-      {% endif %}
-      <div class="dealproduct owl-carousel">
-        {% assign collection = collections.all %}
-          {% paginate collection.products by 100000 %}
-            {% for product in collection.products %}
-              {% for tag in product.tags %}
-                {% if tag contains 'deal-' %}
-               	 {% include 'deal-product-grid-item' with type %}
-                {% endif %}
-              {% endfor %}
-            {% endfor %}
-          {% endpaginate %}
-      </div>  
-	</div>
+  {% if settings.deal_of_the_day_start_date != "" %}
+    <span class="dealofthedayproductsbefore"></span>
+    <style>
+      @media screen and (max-width:992px) {
+        .itm.col-lg-12 {
+          padding: 0 15px !important;
+          max-width: 100%;
+          margin: 0px 0 0 9%;
+          float: none;
+        }
+        .itm.deal_wrap {
+          width: 79%;
+          margin: 12px auto 0;
+        }
+
+      }
+      .progresss.progress-stripedd {
+        background-color: {{settings.totalprogress}};
+      }
+    </style>
+  {% endif %}
 {% endif %}

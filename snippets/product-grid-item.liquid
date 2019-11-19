@@ -1,19 +1,19 @@
 {% assign on_sale = false %}
-{% if product.compare_at_price > product.price %}
-  {% assign on_sale = true %}
+{% if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}
+{% assign on_sale = true %}
 {% endif %}
 {% assign sold_out = true %}
-{% if product.available %}
-  {% assign sold_out = false %}
+{% if product.selected_or_first_available_variant.available %}
+{% assign sold_out = false %}
 {% endif %}
 {% unless type %}
-  {% assign type = "a" %}
+{% assign type = "a" %}
 {% endunless %}
-
+{% unless template == 'list-collections' or template == 'page.collection-listing'%}
 {% unless product_list_class %}
-  {% assign product_list_class = "large--one-quarter medium--one-half small--one-whole" %}
+{% assign product_list_class = "large--one-quarter medium--one-half small--one-half margin--bottom-15" %}
 {% endunless %}
-
+{% endunless %}
 {% assign view_size_chart = false %}
 {% assign display_countdown = false %}
 {% assign display_limited = false %}
@@ -24,220 +24,256 @@
 {% assign displayquantity = 0 %}
 {% assign startdate = product.published_at | date: "%m/%d/%Y %H:%M:%S" %}
 {% assign size_chart_page = settings.sizing_chart_page %}
-{% for tag in product.tags %}  
-  {% if tag == "view-size-chart" %}{% assign view_size_chart = true %}{% endif %}
-  {% if tag == "display-countdown" %}{% assign display_countdown = true %}{% endif %}
-  {% if tag == "display-limited" %}{% assign display_limited = true %}{% endif %}
-  {% if tag contains "quantity-" %}{% capture quantity %}{{ tag | replace: "quantity-","" }}{% endcapture %}{% endif %}
-  {% if tag contains "quantitysold-" %}{% capture qty_sold %}{{ tag | replace: "quantitysold-","" }}{% endcapture %}{% endif %}
-  {% if tag contains "limited-default-" %}{% capture limited_default %}{{ tag | replace: "limited-default-","" }}{% endcapture %}{% endif %}
-  {% if tag contains "expire-" %}{% capture expire %}{{ tag | replace: "expire-","" }}{% endcapture %}{% endif %}
-  {% if tag contains "sizechart-" %}{% capture size_chart_page %}{{ tag | replace: "sizechart-","" }}{% endcapture %}{% endif %}
-  {% if tag contains "displayquantity-" %}{% capture displayquantity %}{{ tag | replace: "displayquantity-","" }}{% endcapture %}{% endif %}
+{% for tag in product.tags %}
+{% assign tag = tag | downcase %}
+{% if tag == "view-size-chart" %}{% assign view_size_chart = true %}{% endif %}
+{% if tag == "display-countdown" %}{% assign display_countdown = true %}{% endif %}
+{% if tag == "display-limited" %}{% assign display_limited = true %}{% endif %}
+{% if tag contains "quantity-" %}{% capture quantity %}{{ tag | replace: "quantity-","" }}{% endcapture %}{% endif %}
+{% if tag contains "quantitysold-" %}{% capture qty_sold %}{{ tag | replace: "quantitysold-","" }}{% endcapture %}{% endif %}
+{% if tag contains "limited-default-" %}{% capture limited_default %}{{ tag | replace: "limited-default-","" }}{% endcapture %}{% endif %}
+{% if tag contains "expire-" %}{% capture expire %}{{ tag | replace: "expire-","" }}{% endcapture %}{% endif %}
+{% if tag contains "sizechart-" %}{% capture size_chart_page %}{{ tag | replace: "sizechart-","" }}{% endcapture %}{% endif %}
+{% if tag contains "displayquantity-" %}{% capture displayquantity %}{{ tag | replace: "displayquantity-","" }}{% endcapture %}{% endif %}
 {% endfor %}
-
-
-<div class="grid__item {{ product_list_class }} custom--width-one-half {% cycle '','dividerof'%}">
-
-  <div class="grid__product-image text-center">
-    
-    {% if settings.collections_quickview %}
-      <div class="quickview {% if settings.product_layout_option == "product_one" %}quick_amount_one{% endif %}">
-        <a href="{{ product.id }}_{{ type }}" data-href="{{ product.id }}_{{ type }}" class="btn quick-shop"  data-no-instant>Quick Buy</a>
-      </div>
+{% if template == 'page.wishlist'%}
+<div
+  class="grid__item {{ product_list_class }} custom--width-one-half {% cycle '','dividerof'%} product-tile-container wishlist-tile-container"
+  data-product-id="{{ product.id }}" id="pro_{{ product.id }}" data-product-handle="{{ product.handle }}">
+  {% else %}
+  <div data-id="{{product.id}}"
+    class="grid__item grid_less_padding {{ mobile_product_list_class }} {{ product_list_class }} custom--width-one-half {% cycle '','dividerof'%}">
     {% endif %}
-    <a href="{{ product.url | within: collection }}" class="grid__image">
-      {% if settings.badges_enable %}
-        {% include 'badges' %}
-      {% endif %}
-      {% if settings.product_layout_option != "product_none" and settings.badges_enable %}
-        {% if product.compare_at_price > product.price and product.available %}
-          {% if settings.show_saved_amount %}
-            {% if settings.sale_button_option == "sale_button_option_one" %}
-              <div class="save-badge">
-                SAVE<br><span class='money'>{{ product.compare_at_price | minus: product.price | money }}</span>
-              </div>
-            {% endif %}
-            {% if settings.sale_button_option == "sale_button_option_two" %}
-              <div class="save-badge2">
-                SAVE<br><span class='money'>{{ product.compare_at_price | minus: product.price | money }}</span>
-              </div>
-            {% endif %}
-            {% if settings.sale_button_option == "sale_button_option_three" %}
-              <div class="save-badge3">
-                On Sale
-              </div>
-            {% endif %}
-            {% if settings.sale_button_option == "sale_button_option_four" %}
-              <div class="save-badge4">
-                On Sale
-              </div>
-            {% endif %}
-            {% if settings.sale_button_option == "sale_button_option_five" %}
-              <div class="save-badge5">
-                Sale 
-              </div>
-            {% endif %}
-          {% endif %}
-        {% endif %}
-      {% endif %}
-      {% assign img_url = product.images.first | img_url: '1x1' | replace: '_1x1.', '_300x.' %}
-      <img src="{{ img_url }}"
-           data-src="{{ img_url }}"
- data-widths="[540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048]"
- data-aspectratio="{{ product.images.first.aspect_ratio }}"
- data-sizes="auto"
- data-parent-fit="contain" width="300" height=""
-           alt="{{ product.images.first.alt | escape }}" class="lazyload fade-in {% if settings.product_display_second_image %}{% if product.images[1] %}first--image{% endif %}{% endif %}" />
-      {% if settings.product_display_second_image %}{% if product.images[1] %}
-       {% assign img_url = product.images[1] | img_url: '1x1' | replace: '_1x1.', '_300x.' %}
-      <img src="{{ img_url }}" 
-           data-src="{{ img_url }}"
- data-widths="[540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048]"
- data-aspectratio="{{ product.images[1].aspect_ratio }}"
- data-sizes="auto"
- data-parent-fit="contain"
-           class="lazyload second--image" alt="{{ product.title }}" width="300" height=""/>{% endif %}{% endif %}
-      {% if product.compare_at_price > product.price %}
-        {% if settings.show_saved_amount %}
-      	  {% if settings.product_layout_option == "product_one" %}
-      		<div class="save_amount_one">SAVE <span class='money'>{{ product.compare_at_price | minus: product.price | money }}</span></div>
-          {% endif %}
-      	{% endif %}
-      {% endif %}
-    </a>
-  </div>
-  
+    <div class="grid_collection_box" data-product-options-wrapper>
+      <div class="grid__product-image text-center">
 
-  
-  <div class="grid__product-content text-center category_detail">
-    
-   
-    
-    <h4>
-      <a href="{{ product.url | within: collection }}">{{ product.title }}{% comment %}{{ product.title | truncate: 25 }}{% endcomment %}</a>
-    </h4>
-     <div class="price-section {% if settings.product_layout_option == "product_two" %}price-section-two{% endif %}{% if settings.product_layout_option == "product_three" %}price-section-three{% endif %}{% if settings.product_layout_option == "product_four" %}price-section-four{% endif %}">
-     <h5>
-     {% assign price_class = "no-compare-price" %}
-      <span class="price {{ price_class }}">
-        {% unless product.available %}
-          {{ 'products.product.unavailable' | t }}
-        {% else %}
-          <span class='money'>{{ product.price | money }}</span>
-        {% endunless %}
-      </span>
-      {% if settings.product_layout_option != "product_none" %}
-        {% if product.compare_at_price > product.price %}{% assign price_class = "" %}<strike><span class='money compare-price'>{{ product.compare_at_price | money }}</span></strike>{% endif %}
-      {% endif %}
-      {% if settings.show_saved_amount %}
-        {% if product.compare_at_price > product.price %}
-          {% if settings.product_layout_option == "product_two" %}
-            <div class="save_amount_two">SAVE <span class='money'>{{ product.compare_at_price | minus: product.price | money }}</span></div>
+        {% if settings.collections_quickview %}
+        <div class="quickview {% if settings.product_layout_option == "product_one" %}quick_amount_one{% endif %}">
+          <a href="{{ product.id }}_{{ type }}" data-href="{{ product.id }}_{{ type }}" class="btn quick-shop"
+            data-no-instant>Quick Buy</a>
+        </div>
+        {% endif %}
+        <a href="{{ product.url | within: collection }}" class="grid__image">
+          {% if settings.badges_enable %}
+          {% include 'badges' %}
+          {% endif %}
+          {% if settings.product_layout_option != "product_none" and settings.badges_enable %}
+          {% if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price and product.available %}
+          {% if settings.show_saved_amount %}
+          {% if settings.sale_button_option == "sale_button_option_one" %}
+          <div class="save-badge">
+            {{ 'products.product.sale' | t }}<br><span
+              class='money'>{{ product.selected_or_first_available_variant.compare_at_price | minus: product.selected_or_first_available_variant.price | money }}</span>
+          </div>
+          {% endif %}
+          {% if settings.sale_button_option == "sale_button_option_two" %}
+          <div class="save-badge2">
+            {{ 'products.product.sale' | t }}<br><span
+              class='money'>{{ product.selected_or_first_available_variant.compare_at_price | minus: product.selected_or_first_available_variant.price | money }}</span>
+          </div>
+          {% endif %}
+          {% if settings.sale_button_option == "sale_button_option_three" %}
+          <div class="save-badge3">
+            {{ 'products.product.on_sale' | t }}
+          </div>
+          {% endif %}
+          {% if settings.sale_button_option == "sale_button_option_four" %}
+          <div class="save-badge4">
+            {{ 'products.product.on_sale' | t }}
+          </div>
+          {% endif %}
+          {% if settings.sale_button_option == "sale_button_option_five" %}
+          <div class="save-badge5">
+            {{ 'products.product.sale' | t }}
+          </div>
+          {% endif %}
+          {% endif %}
+          {% endif %}
+          {% endif %}
+          {% assign img_url = product.images.first | img_url: '1x1' | replace: '_1x1.', '_275x.' %}
+          <img src="{{ product.images.first | img_url: '50' }}" data-src="{{ img_url }}" data-size="auto"
+            alt="{{ product.images.first.alt | escape }}"
+            class="lazyload fade-in {% if settings.product_display_second_image %}{% if product.images[1] %}first--image{% endif %}{% endif %}" />
+          {% if settings.product_display_second_image %}{% if product.images[1] %}
+          {% assign img_url = product.images[1] | img_url: '1x1' | replace: '_1x1.', '_275x.' %}
+          <img src="{{'transparent.png' | asset_url }}" data-src="{{ img_url }}" data-size="auto"
+            class="lazyload second--image" alt="{{ product.title }}" height="" />{% endif %}{% endif %}
+          {% if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}
+          {% if settings.show_saved_amount %}
+          {% if settings.product_layout_option == "product_one" %}
+          <div class="save_amount_one">{{ 'products.product.save' | t }} <span
+              class='money'>{{ product.selected_or_first_available_variant.compare_at_price | minus: product.selected_or_first_available_variant.price | money }}</span>
+          </div>
           {% endif %}
           {% if settings.product_layout_option == "product_three" %}
-          	<div class="save_amount_three">-{{ product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price  | round: 2  }}%</div>
+          <div class="save_amount_one"> {{ 'products.product.save' | t }}
+            {{ product.selected_or_first_available_variant.compare_at_price | minus: product.selected_or_first_available_variant.price | times: 100.0 | divided_by: product.selected_or_first_available_variant.compare_at_price  | round  }}%
+          </div>
           {% endif %}
-      	  {% if settings.product_layout_option == "product_four" %}
-          	<div class="save_amount_four">SAVE {{ product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price  | round: 2  }}%</div>
           {% endif %}
+          {% endif %}
+        </a>
+      </div>
+
+
+
+      <div class="grid__product-content text-center category_detail">
+        {% if settings.products_max_desc_length_enable %}
+        {% assign title = product.title | truncatewords: settings.products_max_desc_length %}
+        {% else %}
+        {% assign title = product.title %}
         {% endif %}
-      {% endif %}
-       </h5>
-    </div>
-    
-    {% if settings.display_review_star_collection %}
-     {% if settings.productreview == 'loox'%}
-          <div class="loox-rating" data-id="{{ product.id }}" data-rating="{{ product.metafields.loox.avg_rating }}" data-raters="{{ product.metafields.loox.num_reviews }}"></div>
-                 {% endif %}
-                   {% if settings.productreview == 'shopify_reviews'%} 
-    <div class="fheight">
-            <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
-    </div>
-         {% endif %}
-      
-    {% endif %}
-    {% if settings.enable_product_progressbar and settings.show_progressbar_on_cands and product.available %}
-      {% assign inventory_quantity = 0 %}
-      {% for variant in product.variants %}
-    	{% capture inventory_quantity %}
-    	  {{ inventory_quantity | plus: variant.inventory_quantity }}
-      	{% endcapture %}
-      {% endfor %}
-      {% if quantity == 0 %}
+        <h4>
+          <a href="{{ product.url | within: collection }}">{{ title }}</a>
+        </h4>
+        <div
+          class="price-section {% if settings.product_layout_option == "product_two" %}price-section-two{% endif %}{% if settings.product_layout_option == "product_three" %}price-section-three{% endif %}{% if settings.product_layout_option == "product_four" %}price-section-two{% endif %}">
+          <h5>
+            <span data-product-options-price>
+              {% assign price_class = "no-compare-price" %}
+              <span class="price {{ price_class }}">
+                {% unless product.selected_or_first_available_variant.available %}
+                {{ 'products.product.unavailable' | t }}
+                {% else %}
+                <span class='money'>{{ product.selected_or_first_available_variant.price | money }}</span>
+                {% endunless %}
+              </span>
+              {% if settings.product_layout_option != "product_none" %}
+              {% if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}{% assign price_class = "" %}<strike><span
+                  class='money compare-price'>{{ product.selected_or_first_available_variant.compare_at_price | money }}</span></strike>{% endif %}
+              {% endif %}
+            </span>
+            {% if settings.show_saved_amount %}
+            {% if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}
+            {% if settings.product_layout_option == "product_two" %}
+            <div class="save_amount_two">{{ 'products.product.save' | t }} <span
+                class='money'>{{ product.selected_or_first_available_variant.compare_at_price | minus: product.selected_or_first_available_variant.price | money }}</span>
+            </div>
+            {% endif %}
+
+            {% if settings.product_layout_option == "product_four" %}
+            <div class="save_amount_two" data-product-options-price-save-two>{{ 'products.product.save' | t }}
+              {{ product.selected_or_first_available_variant.compare_at_price | minus: product.selected_or_first_available_variant.price | times: 100.0 | divided_by: product.selected_or_first_available_variant.compare_at_price  | round  }}%
+            </div>
+            {% endif %}
+            {% endif %}
+            {% endif %}
+          </h5>
+        </div>
+
+        {% include 'product-get-control' %}
+
+        {% if settings.display_review_star_collection %}
+        {% if settings.productreview == 'loox'%}
+        <div class="loox-rating" data-id="{{ product.id }}" data-rating="{{ product.metafields.loox.avg_rating }}"
+          data-raters="{{ product.metafields.loox.num_reviews }}"></div>
+        {% endif %}
+        {% if settings.productreview == 'shopify_reviews'%}
+
+        <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+
+        {% endif %}
+
+        {% endif %}
+        {% if settings.product_flash_sold_enable_demo_data and settings.enable_product_progressbar and settings.show_progressbar_on_cands and product.available %}
+        {% assign inventory_quantity = 0 %}
+        {% for variant in product.variants %}
+        {% capture inventory_quantity %}
+        {{ inventory_quantity | plus: variant.inventory_quantity }}
+        {% endcapture %}
+        {% endfor %}
+        {% if quantity == 0 %}
         {% assign quantity = 100 %}
-      {% else %}	
+        {% else %}
         {% assign quantity = quantity | times: 1 %}
-      {% endif %}
-      {% if qty_sold == 0 %}
-    	{% assign defaultSold = quantity | times: 80 | divided_by: 100 %}
-    	{% assign totalSold = inventory_quantity | plus: defaultSold %}
-    	{% if totalSold >= quantity %}
-    	  {% assign defaultSold = quantity | times: 60 | divided_by: 100 %}
-    	  {% assign totalSold = inventory_quantity | plus: defaultSold %}
-    	  {% if totalSold >= quantity %}
-    		{% assign defaultSold = quantity | times: 40 | divided_by: 100 %}
-    		{% assign totalSold = inventory_quantity | plus: defaultSold %}
-    		{% if totalSold >= quantity %}
-    		  {% assign defaultSold = quantity | times: 20 | divided_by: 100 %}
-    		  {% assign totalSold = inventory_quantity | plus: defaultSold %}
-    		  {% if totalSold >= quantity %}
-    			{% assign totalSold = inventory_quantity | times: 1 %}
-    			{% if totalSold >= quantity %}
-    			  {% assign lastTwo = totalSold | slice: -2, 2 %}
-    			  {% assign remaining = totalSold | replace: lastTwo, '' %}
-    			  {% if lastTwo != '00' %}
-    				{% assign remaining = remaining | plus: 1 %}
-    				{% assign remaining = remaining | append: '00' %}
-    				{% assign quantity = remaining | times: 1 %}
-    			  {% else %}	
-    				{% assign quantity = quantity | plus: totalSold | times: 1 %}
-    			  {% endif %}
-    			{% endif %}
-    		  {% endif %}
-    		{% endif %}
-    	  {% endif %}
-    	{% endif %}
-      {% else %}
-    	{% assign defaultSold = qty_sold | times: 1 %}
-    	{% if settings.display_quantity_count_real %}
-    	  {% assign totalSold = inventory_quantity | plus: defaultSold %}
-    	{% else %}	
-    	  {% assign totalSold = defaultSold %}
-    	{% endif %}
-    	{% if totalSold >= quantity %}
-    	  {% assign plus_qty = totalSold | minus: quantity | plus: 3 %}
-    	  {% assign quantity = quantity | plus: plus_qty %}
-    	{% endif %}
-      {% endif %}
-      {% if display_limited %}
+        {% endif %}
+        {% if qty_sold == 0 %}
+        {% assign defaultSold = quantity | times: 80 | divided_by: 100 %}
+        {% assign totalSold = inventory_quantity | plus: defaultSold %}
+        {% if totalSold >= quantity %}
+        {% assign defaultSold = quantity | times: 60 | divided_by: 100 %}
+        {% assign totalSold = inventory_quantity | plus: defaultSold %}
+        {% if totalSold >= quantity %}
+        {% assign defaultSold = quantity | times: 40 | divided_by: 100 %}
+        {% assign totalSold = inventory_quantity | plus: defaultSold %}
+        {% if totalSold >= quantity %}
+        {% assign defaultSold = quantity | times: 20 | divided_by: 100 %}
+        {% assign totalSold = inventory_quantity | plus: defaultSold %}
+        {% if totalSold >= quantity %}
+        {% assign totalSold = inventory_quantity | times: 1 %}
+        {% if totalSold >= quantity %}
+        {% assign lastTwo = totalSold | slice: -2, 2 %}
+        {% assign remaining = totalSold | replace: lastTwo, '' %}
+        {% if lastTwo != '00' %}
+        {% assign remaining = remaining | plus: 1 %}
+        {% assign remaining = remaining | append: '00' %}
+        {% assign quantity = remaining | times: 1 %}
+        {% else %}
+        {% assign quantity = quantity | plus: totalSold | times: 1 %}
+        {% endif %}
+        {% endif %}
+        {% endif %}
+        {% endif %}
+        {% endif %}
+        {% endif %}
+        {% else %}
+        {% assign defaultSold = qty_sold | times: 1 %}
+        {% if settings.display_quantity_count_demo_data %}
+        {% assign totalSold = inventory_quantity | plus: defaultSold %}
+        {% else %}
+        {% assign totalSold = defaultSold %}
+        {% endif %}
+        {% if totalSold >= quantity %}
+        {% assign plus_qty = totalSold | minus: quantity | plus: 3 %}
+        {% assign quantity = quantity | plus: plus_qty %}
+        {% endif %}
+        {% endif %}
+        {% if display_limited %}
         {% assign displayquantity = displayquantity | times: 1 %}
         {% if displayquantity > 0 %}
-          {% assign quantity = displayquantity | plus: 100 %}
-          {% assign totalSold = displayquantity | plus: 100 | minus: displayquantity %}
+        {% assign quantity = displayquantity | plus: 100 %}
+        {% assign totalSold = displayquantity | plus: 100 | minus: displayquantity %}
         {% endif %}
-    	{% unless product.available %}
-          {% assign totalSold = quantity %}
+        {% unless product.available %}
+        {% assign totalSold = quantity %}
         {% endunless %}
         {% assign qtyleft = quantity | minus: totalSold %}
-     
-        <div class="progress progress-striped" data-qty="{{ quantity }}" data-total="{{ totalSold }}"><div class="progress-bar"></div></div>
-       <p style="margin: 0;"><small>{{ 'products.progress_bar.limited_edition' | t }}: {{ 'products.progress_bar.only' | t }} <span class="danger">{% if qtyleft > 0 %}{{ qtyleft }}{% else %}{{ limited_default }}{% endif %}</span> {{ 'products.progress_bar.left' | t }}.</small></p>  
-    {% else %}
-        {% unless product.available %}
-          {% assign totalSold = quantity %}
+
+        <div class="progress progress-striped" data-proid="p{{ product.id }}"
+          data-per="{{ quantity | minus: totalSold }}" data-qty="{{ quantity }}" data-total="{{ totalSold }}">
+          <div class="progress-bar"></div>
+        </div>
+        <p style="margin: 0;"><small>{{ 'products.progress_bar.limited_edition' | t }}:
+            {{ 'products.progress_bar.only' | t }} <span
+              class="danger">{% if qtyleft > 0 %}{{ qtyleft }}{% else %}{{ limited_default }}{% endif %}</span>
+            {{ 'products.progress_bar.left' | t }}.</small></p>
+        {% else %}
+        {% unless product.selected_or_first_available_variant.available %}
+        {% assign totalSold = quantity %}
         {% endunless %}
-        <div class="progress progress-striped" data-qty="{{ quantity }}" data-total="{{ quantity  | minus: totalSold}}"><div class="progress-bar"></div></div>
-     <p style="margin: 0;"><small>{{ totalSold }}{% if settings.enable_total_quantity %} of {{ quantity }}{% endif %} {{ 'products.progress_bar.sold' | t }}</small></p>
-        
-    {% endif %}
-    {% endif %}
-  </div>
-  
-  <script id="product-json-{{product.id}}_{{ type }}" type="text/template"  data-no-instant>{{product | json}}</script>
-  <script id="product-template-{{product.id}}_{{ type }}" type="text/template" data-no-instant>
-    <span class="close-quickview"><i class="fa fa-times"></i></span>
-    <div class="quickview-form">
+        <div class="progress progress-striped" data-proid="p{{ product.id }}"
+          data-per="{{ quantity | minus: totalSold }}" data-qty="{{ quantity }}"
+          data-total="{{ quantity  | minus: totalSold }}">
+          <div class="progress-bar"></div>
+        </div>
+        <p style="margin: 0;">
+          <small>{{ totalSold }}{% if settings.product_flash_sold_enable_demo_data and settings.enable_total_quantity %}
+            of {{ quantity }}{% endif %} {{ 'products.progress_bar.sold' | t }}</small></p>
+
+        {% endif %}
+        {% endif %}
+        {% if template == 'page.wishlist'%}
+        <div class="product-tile--tile-actions flex pro_{{product.id}}">
+          {% include 'wishlist-button'%}
+        </div>
+        {% endif %}
+      </div>
+
+      <script id="product-json-{{product.id}}_{{ type }}" type="text/template" data-no-instant>{{product | json}}
+      </script>
+      <script id="product-template-{{product.id}}_{{ type }}" type="text/template" data-no-instant>
+        <span class="close-quickview"><i class="fa fa-times"></i></span>
+    <div class="quickview-form popup-product">
       <div class="grid product-single" style=" visibility: hidden;">
         <div class="grid__item large--two-fifths text-center product--images">
           <div class="product-single__photos">
@@ -296,11 +332,11 @@
           <a href="{{ product.url | within: collection }}" class="btn--secondary">{{ 'products.general.full_detail_button_text' | t }}</a>
         </div>
 
-        <div class="grid__item large--three-fifths pr35">
-          <h1 itemprop="name">{{ product.title }}</h1>
+        <div class="grid__item large--three-fifths">
+          <h2 itemprop="name">{{ product.title }}</h2>
           <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
             <meta itemprop="priceCurrency" content="{{ shop.currency }}" />
-            <link itemprop="availability" href="http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}" />
+            <link itemprop="availability" href="http://schema.org/{% if product.selected_or_first_available_variant.available %}InStock{% else %}OutOfStock{% endif %}" />
             <form action="/cart/add" method="post" enctype="multipart/form-data" id="AddToCartForm--{{ product.id }}_{{ type }}" class="form-vertical">
 
               <div class="grid product--option price">
@@ -322,7 +358,7 @@
                 {% endfor %}
               </select>
 			  {% if settings.variant_swatch %}
-                {% if product.available and product.variants.size > 1 %}
+                {% if product.selected_or_first_available_variant.available and product.variants.size > 1 %}
                   {% for option in product.options %}
                     {% include 'swatch' with option %}
                   {% endfor %}
@@ -350,7 +386,7 @@
               <div class="grid__item large--one-half {% if settings.display_quantity_dropdown %}no--padding{% endif %} mobile-full">
                 <div class="header ">&nbsp;</div>
                 {% if settings.cart_button_fullwidth == false %}
-                  <button type="submit" name="add" id="AddToCart" class="btn AddToCart">
+                  <button type="submit" name="add" id="AddToCart" class="btn AddToCart badge_ATC_button">
                     {% if settings.enable_checkout_icon %}
                     <img src="{{ 'cart-button-icon.png' | asset_url }}" alt="+" class="no-border ratina-img addIcon" />
                   {% endif %}
@@ -365,12 +401,12 @@
                    {% if settings.enable_custom_checkout_icon %}
 
    <img alt="Checkout Secure" src="{{ 'checkout_icon.png' | asset_url }}" class="no-border checkout-img checkout-img" />
-       
+
 
 {% else %}
    <img alt="Checkout Secure" src="https://cdn.shopify.com/s/files/1/2623/6172/files/secure.png?12026884505730572547" class="no-border checkout-img checkout-img" />
-       
-{% endif %}              
+
+{% endif %}
     </div>
                   {% endif %}
                 {% endif %}
@@ -381,13 +417,13 @@
                                  {% if settings.enable_custom_checkout_icon %}
 
    <img alt="Checkout Secure" src="{{ 'checkout_icon.png' | asset_url }}" class="no-border checkout-img checkout-img" />
-       
+
 
 {% else %}
    <img alt="Checkout Secure" src="https://cdn.shopify.com/s/files/1/2623/6172/files/secure.png?12026884505730572547" class="no-border checkout-img checkout-img" />
-       
+
 {% endif %}
-    
+
     </div>
                 {% endif %}
               {% endif %}
@@ -405,15 +441,15 @@
                 </button>
                  {% if settings.enable_checkout_icon %}
                   <div class="grid__item large--one-whole checkout--icons-product full--width-button">
-                    
+
                     {% if settings.enable_custom_checkout_icon %}
 
    <img alt="Checkout Secure" src="{{ 'checkout_icon.png' | asset_url }}" class="no-border checkout-img checkout-img" />
-       
+
 
 {% else %}
    <img alt="Checkout Secure" src="https://cdn.shopify.com/s/files/1/2623/6172/files/secure.png?12026884505730572547" class="no-border checkout-img checkout-img" />
-       
+
 {% endif %}
     </div>
                 {% endif %}
@@ -421,11 +457,20 @@
               {% endif %}
             </div>
             </form>
-            {% if settings.enable_product_progressbar and product.available %}
+
+            {% if settings.informations_alert_enable %}
+              <div class="grid">
+                  <div class="grid__item large--one-whole progress--bar">
+                    {% include 'product-informations-alert' %}
+                  </div>
+              </div>
+            {% endif %}
+
+            {% if settings.product_flash_sold_enable_demo_data and settings.enable_product_progressbar and product.selected_or_first_available_variant.available %}
               <div class="grid">
                 <div class="grid__item large--one-whole progress--bar">
                  {% if settings.enable_progressbar_text %}
-               		<div class="header">{{ settings.enable_progressbar_text_value }}</div>                
+               		<div class="header">{{ settings.enable_progressbar_text_value }}</div>
               	{% endif %}
                   {% assign inventory_quantity = 0 %}
                   {% for variant in product.variants %}
@@ -435,7 +480,7 @@
                   {% endfor %}
                   {% if quantity == 0 %}
                     {% assign quantity = 100 %}
-                  {% else %}	
+                  {% else %}
                     {% assign quantity = quantity | times: 1 %}
                   {% endif %}
                   {% if qty_sold == 0 %}
@@ -459,7 +504,7 @@
                                 {% assign remaining = remaining | plus: 1 %}
                                 {% assign remaining = remaining | append: '00' %}
                                 {% assign quantity = remaining | times: 1 %}
-                              {% else %}	
+                              {% else %}
                                 {% assign quantity = quantity | plus: totalSold | times: 1 %}
                               {% endif %}
                             {% endif %}
@@ -469,9 +514,9 @@
                     {% endif %}
                   {% else %}
                     {% assign defaultSold = qty_sold | times: 1 %}
-                    {% if settings.display_quantity_count_real %}
+                    {% if settings.display_quantity_count_demo_data %}
                       {% assign totalSold = inventory_quantity | plus: defaultSold %}
-                    {% else %}	
+                    {% else %}
                       {% assign totalSold = defaultSold %}
                     {% endif %}
                     {% if totalSold >= quantity %}
@@ -485,18 +530,22 @@
                       {% assign quantity = displayquantity | plus: 100 %}
                       {% assign totalSold = displayquantity | plus: 100 | minus: displayquantity %}
                     {% endif %}
-                    {% unless product.available %}
+                    {% unless product.selected_or_first_available_variant.available %}
                       {% assign totalSold = quantity %}
                     {% endunless %}
                     {% assign qtyleft = quantity | minus: totalSold %}
-                    <div class="progress progress-striped" data-qty="{{ quantity }}" data-total="{{ totalSold }}"><div class="progress-bar"></div></div>
+                    <div class="progress progress-striped"  data-proid="p{{ product.id }}"
+             data-per="{{ quantity | minus: totalSold }}" data-qty="{{ quantity }}"
+             data-total="{{ totalSold }}"><div class="progress-bar"></div></div>
                     <p class="remaining--text">{{ 'products.progress_bar.limited_edition' | t }}: {{ 'products.progress_bar.only' | t }} <span class="danger">{% if qtyleft > 0 %}{{ qtyleft }}{% else %}{{ limited_default }}{% endif %}</span> {{ 'products.progress_bar.left' | t }}.</p>
                   {% else %}
-                  	{% unless product.available %}
+                  	{% unless product.selected_or_first_available_variant.available %}
                       {% assign totalSold = quantity %}
                     {% endunless %}
-                    <div class="progress progress-striped" data-qty="{{ quantity }}" data-total="{{ totalSold }}"><div class="progress-bar"></div></div>
-                    <p class="remaining--text"><span class="quantity">{{ totalSold }}</span>{% if settings.enable_total_quantity %} of <span class="quantity">{{ quantity }}</span>{% endif %} {{ 'products.progress_bar.sold' | t }}</p>
+                    <div class="progress progress-striped" data-proid="p{{ product.id }}"
+             data-per="{{ quantity | minus: totalSold }}" data-qty="{{ quantity }}"
+             data-total="{{ quantity  | minus: totalSold }}"><div class="progress-bar"></div></div>
+                    <p class="remaining--text"><span class="quantity">{{ totalSold }}</span>{% if settings.product_flash_sold_enable_demo_data and settings.enable_total_quantity %} of <span class="quantity">{{ quantity }}</span>{% endif %} {{ 'products.progress_bar.sold' | t }}</p>
                   {% endif %}
                 </div>
               </div>
@@ -538,8 +587,5 @@
       {% endif %}
     {% endif %}
   </script>
-  
-</div>
-
-
-
+    </div>
+  </div>

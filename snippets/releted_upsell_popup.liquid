@@ -23,8 +23,8 @@
   }
   .related_popup_text{
     color:{{settings.related_popup_text_font_color}};
-/*     font-size:{{settings.related_popup_text_font_size}}px; */
-    font-size:18px;
+ font-size:{{settings.related_popup_text_font_size}}px;  
+    
      text-align:center;
     margin:0;
     
@@ -83,21 +83,26 @@
 	display: none;
 }
   a.btn.btn-default.r_continue_shoping_color {
-    background: {{settings.color_secondary}}!important;
+    background: {{settings.r_continue_shoping_color}}!important;
         padding: 23px 25px;
     line-height: 1;
     font-size: 16px;
+    color:{{settings.r_continue_shoping_text_color}}!important;
     border: none;
 }
   a.btn.btn-default.r_view_cart_color {
-    color: black!important;
-    background: white!important;
+    color: {{settings.r_view_cart_text_color}}!important;
+    background: {{settings.r_view_cart_color}}!important;
     font-weight: normal;
     padding: 23px 30px;
     line-height: 1;
     font-size: 16px;
     margin-right: 10px;
   }
+  button.btn.btn-default.r_checkout_color {
+    background: {{settings.r_checkout_color}}!important;
+     color: {{settings.r_checkout_text_color}}!important;
+}
   .r_checkout_color img.no-border.ratina-img.addIcon {
     width: 21px;
     position: relative;
@@ -156,6 +161,7 @@
 {% assign cross-sell-8d = "false" %}
       
        {% for tag in product.tags %}
+           {% assign tag = tag | downcase %}
   {% if tag == "cross-sell-1" %}
           {% assign cross-sell-1d = "true" %}
            {% elsif tag == "cross-sell-2" %}
@@ -217,11 +223,11 @@
             data: data,
             beforeSend: function() {
                 $(that).attr("disabled",true);
-                $(that).html('<span class="r_AddToCartText">Adding...</span>');
+                $(that).html('<span class="r_AddToCartText">{{ 'general.crossell.adding' | t  }}</span>');
             },
             success: function(res){
                 $(that).removeAttr("disabled");
-                $("#related_cart_sucsses_msg").html('<div class="alert alert-success alert-dismissable fade in"><a href="#" class="close custome_close_r" data-dismiss="alert" aria-label="close">&times;</a> Item added in cart </div>')
+                $("#related_cart_sucsses_msg").html('<div class="alert alert-success alert-dismissable fade in"><a href="#" class="close custome_close_r" data-dismiss="alert" aria-label="close">&times;</a> {{ 'general.crossell.added' | t  }} </div>')
 
                 setTimeout(function(){
                     $(".custome_close_r").trigger("click");
@@ -274,8 +280,8 @@ div#related_popup_upsell .modal-dialog .modal-header {
     color: #fff;
 }
 div#related_popup_upsell .modal-dialog .modal-header h4.modal-title {
-    color: #000;
-  font-size:40px;
+  color: {{settings.related_popup_heading_font_color}};
+  font-size:{{settings.related_popup_heading_font_size}};
   margin-bottom:15px;
 }
 div#related_popup_upsell .modal-dialog .modal-content .modal-body {
@@ -348,10 +354,17 @@ div#related_popup_upsell .modal-dialog .modal-content .modal-body .small--one-ha
       margin: 15px auto !important;
   }
 }
+  
 @media screen and (max-width:750px) {
+  
+  
   div#related_popup_upsell a.grid-view-item__link.grid_set_box {
-    min-height: auto !important;
-    max-height: 110px !important;
+    min-height: auto !important; 
+       
+    
+    
+    
+    
     padding:4px 0;
   }
   #related_popup_upsell .modal-dialog {
@@ -365,6 +378,7 @@ div#related_popup_upsell .modal-dialog .modal-content .modal-body .small--one-ha
     }
     div#related_popup_upsell .modal-dialog .modal-content .modal-body .small--one-half .grid-view-item .h4.grid-view-item__title {
     font-size: 12px;
+    line-height:28px;
   }
 
   .r_addtocartbutton .btn {

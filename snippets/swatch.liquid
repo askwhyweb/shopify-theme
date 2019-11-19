@@ -47,24 +47,41 @@
           {% assign values = values | append: ',' | append: value %} 
           {% assign values = values | split: ',' %}
           <div data-value="{{ value | escape }}" class="swatch-element {% if is_color %}color {% endif %}{{ value | handle }} {% if variant.available %}available{% else %}soldout{% endif %}">
-            {% if is_color %}
-              {% if variant.available %}
-              	<div class="tooltip">{{ value }}</div>
+            <div class="sold-out-tooltip">Currently out of stock</div>
+
+            {% comment %}
+              {% if is_color %}
+                {% if variant.available %}
+                  <div class="tooltip">{{ value }}</div>
+                {% else %}
+                  <div class="tooltip">Currently out of stock</div>
+                {% endif %}
               {% else %}
-            	<div class="tooltip">Currently out of stock</div>
+                {% unless variant.available %}
+                  <div class="tooltip">Currently out of stock</div>
+                {% endunless %}
               {% endif %}
-            {% else %}
-              {% unless variant.available %}
-                <div class="tooltip">Currently out of stock</div>
-              {% endunless %}
-            {% endif %}
-            <input id="swatch-{{ option_index }}-{{ value | handle }}-{{ product.id }}" type="radio" name="option-{{ option_index }}-{{ product.id }}" value="{{ value | escape }}"{% if forloop.first %} checked{% endif %} {% unless variant.available %}disabled{% endunless %} />
+            {% endcomment %}
+            <input id="swatch-{{ option_index }}-{{ value | handle }}-{{ product.id }}" type="radio" name="option-{{ option_index }}-{{ product.id }}" value="{{ value | escape }}"{% if forloop.first %} checked{% endif %} {% unless variant.available %}{% endunless %} />
             {% if is_color %}
+            {% if settings.swatchestype == 'Color'%}
               <label for="swatch-{{ option_index }}-{{ value | handle }}-{{ product.id }}">
                 <div style="background-color: {{ value | split: ' ' | last | handle }}; background-image: url({{ value | handle | append: '.' | append: file_extension | asset_url }})">
                   <img class="crossed-out" src="{{ 'soldout.png' | asset_url }}" />
                 </div>
               </label>
+            {% elsif settings.swatchestype == 'Variant Image' %}
+              <label for="swatch-{{ option_index }}-{{ value | handle }}-{{ product.id }}">
+                <div style=" background-image: url({{ variant.image.src | product_img_url: '35x'  }});background-size:100%;">
+                  <img class="crossed-out" src="{{ 'soldout.png' | asset_url }}" />
+                </div>
+              </label>
+               {% else %}
+             <label for="swatch-{{ option_index }}-{{ value | handle }}-{{ product.id }}">
+                {{ value }}
+                <img class="crossed-out" src="{{ 'soldout.png' | asset_url }}" />
+              </label>
+            {% endif %}
             {% else %}
               <label for="swatch-{{ option_index }}-{{ value | handle }}-{{ product.id }}">
                 {{ value }}

@@ -43,7 +43,11 @@
              
                    {% if settings.termscheck %}
     <br style="clear:both"> 
-              <p class="checktext"><input type="checkbox" id="footercheckcontact"> <a href="{{ settings.termstextlink }}">{{ settings.termstext }}</a></p>
+              <p class="checktext">
+                <label>
+                  <input type="checkbox" id="footercheckcontact"> <span>{{ settings.termstext }}</span>
+                </label>
+              </p>
                         <script>
 $('body').on('click', '[name="ftc"]', function() {
    
@@ -63,7 +67,7 @@ $('body').on('click', '[name="ftc"]', function() {
             </div>
           </div>
         {% endif %}
-        <div class="grid__item large--one-third page--item">
+        <div class="contact-page__sidebar grid__item large--one-third page--item">
           <div class="inner-header">
             <h3>{{ 'contact.form.details_title' | t }}</h3>
           </div>
@@ -72,9 +76,9 @@ $('body').on('click', '[name="ftc"]', function() {
             {% if settings.contact_availability != "" %}
               <p>{{ settings.contact_availability }}</p>
             {% endif %}
-            {% if settings.contact_phone_1 != "" %}<p class="bold-text"><i class="fa fa-phone"></i> {{ settings.contact_phone_1 }}</p>{% endif %}
-            {% if settings.contact_phone_2 != "" %}<p class="bold-text"><i class="fa fa-phone"></i> {{ settings.contact_phone_2 }}</p>{% endif %}
-            {% if settings.contact_phone_3 != "" %}<p class="bold-text"><i class="fa fa-phone"></i> {{ settings.contact_phone_3 }}</p>{% endif %}
+            {% if settings.contact_phone_1 != "" %}<p class="bold-text"><i class="fa fa-phone"></i> <a style="padding-left: 3px;"href="tel:{{ settings.contact_phone_1 }}">{{ settings.contact_phone_1 }}</a></p>{% endif %}
+            {% if settings.contact_phone_2 != "" %}<p class="bold-text"><i class="fa fa-phone"></i> <a href="tel:{{ settings.contact_phone_2 }}">{{ settings.contact_phone_2 }}</a></p>{% endif %}
+            {% if settings.contact_phone_3 != "" %}<p class="bold-text"><i class="fa fa-phone"></i> <a href="tel:{{ settings.contact_phone_3 }}">{{ settings.contact_phone_3 }}</a></p>{% endif %}
             {% if settings.contact_email != "" %}
               <p class="bold-text"><i class="fa fa-envelope"></i> <a href="mailto:{{ settings.contact_email }}">{{ settings.contact_email }}</a></p>
             {% endif %}
@@ -86,18 +90,7 @@ $('body').on('click', '[name="ftc"]', function() {
               <p>{{ settings.physical_mailing_address }}</p>
             {% endif %}
           </div>
-          {% if settings.display_track_form %}
-          <div class="contact-box">
-            <p><strong>{{ 'contact.track_order.title' | t }}</strong></p>
-            <div class="form-vertical">
-              <form id="OrderForm" action="#" method="post">
-                <input type="text" id="order_number" class="input-full form-control" name="order_number" placeholder="{{ 'contact.track_order.order_number' | t }}" autocorrect="off" autocapitalize="off" value="" required />
-                <input type="email" id="email_track" class="input-full form-control" name="email" placeholder="{{ 'contact.track_order.email_address' | t }}" autocorrect="off" autocapitalize="off" value="" required />
-                <input type="submit" class="btn" value="{{ 'contact.track_order.button' | t }}" />
-              </form>
-            </div>
-          </div>
-          {% endif %}
+        
           {% if settings.display_faqs_link %}
             <a href="{{settings.faq_page}}" class="faq_link">{{ 'contact.form.faqs_link' | t }}</a>
           {% endif %}

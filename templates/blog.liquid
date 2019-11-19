@@ -10,7 +10,7 @@
     <div class="{% if settings.sidebar_enabled %}col-sm-9 col-lg-9{% else %}col-sm-12 col-lg-12{% endif %} blog-sides">
       <h2 class="h3 bl-tittle"><a href="{{ blog.url }}" title="{{ blog.title | escape }}">{{ blog.title }}</a></h2>
       {% for article in blog.articles %}
-        <div class="{% if settings.blog_articles_per_row == "1" %}         
+        <div class="no-padding {% if settings.blog_articles_per_row == "1" %}         
                     col-sm-12 col-lg-12
                     {%endif %}
            {% if settings.blog_articles_per_row == "2" %}         

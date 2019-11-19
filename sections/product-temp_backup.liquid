@@ -15,6 +15,7 @@
 {% assign estimateStartDate = settings.delivery_start %}
 {% assign estimateEndDate = settings.delivery_end %}
 {% for tag in product.tags %}
+  {% assign tag = tag | downcase %}
   {% if tag == "view-size-chart" %}{% assign view_size_chart = true %}{% endif %}
   {% if tag == "display-countdown" %}{% assign display_countdown = true %}{% endif %}
   {% if tag == "display-limited" %}{% assign display_limited = true %}{% endif %}
@@ -251,7 +252,7 @@
               {% endif %}
             </div>
           </form>
-          {% if settings.enable_product_progressbar and product.available %}
+          {% if settings.enable_demo_data_product_information and settings.enable_product_progressbar and product.available %}
             <div class="grid">
               <div class="grid__item large--one-half progress--bar">
                 {% if settings.enable_progressbar_text %}
@@ -299,7 +300,7 @@
                   {% endif %}
                 {% else %}
                   {% assign defaultSold = qty_sold | times: 1 %}
-                  {% if settings.display_quantity_count_real %}
+                  {% if settings.display_quantity_count_demo_data %}
                     {% assign totalSold = inventory_quantity | plus: defaultSold %}
                   {% else %}	
                     {% assign totalSold = defaultSold %}
@@ -326,7 +327,7 @@
                     {% assign totalSold = quantity %}
                   {% endunless %}
                   <div class="progress progress-striped" data-qty="{{ quantity }}" data-total="{{ totalSold }}"><div class="progress-bar"></div></div>
-          		  <p class="remaining--text"><span class="quantity">{{ totalSold }}</span>{% if settings.enable_total_quantity %} of <span class="quantity">{{ quantity }}</span>{% endif %} {{ 'products.progress_bar.sold' | t }}</p>
+          		  <p class="remaining--text"><span class="quantity">{{ totalSold }}</span>{% if settings.enable_demo_data_product_information and settings.enable_total_quantity %} of <span class="quantity">{{ quantity }}</span>{% endif %} {{ 'products.progress_bar.sold' | t }}</p>
                 {% endif %}
               </div>
             </div>
@@ -343,7 +344,7 @@
             </div>
           {% endif %}
           
-          {% if settings.visitor_counter_enable %}
+          {% if settings.enable_demo_data_product_information and settings.visitor_counter_enable %}
             {% include 'visitor-counter' %}
           {% endif %}
           
@@ -672,7 +673,7 @@
         {% endif %}
       {% endif %}
     {% endif %}
-    {% if settings.visitor_counter_enable %}
+    {% if settings.enable_demo_data_product_information and settings.visitor_counter_enable %}
     timber.visitorCounter();
     {% endif %}
     {% if settings.upsell_popup_enable and upsell_enable %}

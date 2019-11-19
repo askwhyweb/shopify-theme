@@ -20,7 +20,7 @@
         <input type="text" name="customer[last_name]" id="LastName" class="input-full form-control" placeholder="{{ 'customer.register.last_name' | t }}" {% if form.last_name %}value="{{ form.last_name }}"{% endif %} autocapitalize="words">
         </div>
         <label for="Email" class="hidden-label">{{ 'customer.register.email' | t }}</label>
-        <input type="email" name="customer[email]" id="Email" class="input-full{% if form.errors contains 'email' %} error{% endif %} form-control" placeholder="{{ 'customer.register.email' | t }}" {% if form.email %} value="{{ form.email }}"{% endif %} autocorrect="off" autocapitalize="off">
+        <input type="email" name="customer[email]" id="register_Email" class="input-full{% if form.errors contains 'email' %} error{% endif %} form-control" placeholder="{{ 'customer.register.email' | t }}" {% if form.email %} value="{{ form.email }}"{% endif %} autocorrect="off" autocapitalize="off">
 
         <label for="CreatePassword" class="hidden-label">{{ 'customer.register.password' | t }}</label>
         <input type="password" name="customer[password]" id="CreatePassword" class="input-full{% if form.errors contains 'password' %} error{% endif %} form-control" placeholder="{{ 'customer.register.password' | t }}">

@@ -18,10 +18,18 @@
       <li class="total-{{ countreasons }}-reasons">
         <img src="{{ reason-image | asset_img_url: '150x' }}" class="ratina-img" alt="Image of {{ settings[reason] | escape }}" />
         {% if settings.display_topreasons_text %}
-          <br />{{ settings[reason] }}
+          <br />
+        <span 
+              {% if settings[reason] contains 'shipping' or settings[reason] contains 'Shipping' or settings[reason] contains 'XX'%}
+              class="badage_shipping_text"
+               {% endif %}
+              > {{ settings[reason] }}
+        </span>
+          <span id="badage_shipping_msg" style="display:none;">{{ settings[reason] }}</span>
         {% endif %}
       </li>
       {% endif %}
     {% endfor %}
+     
   </ul>
 </div>

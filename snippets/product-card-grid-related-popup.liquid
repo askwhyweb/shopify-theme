@@ -98,12 +98,14 @@
      </p>
       
     </div>
-  
+  {% if hide_default_title %}
+  {% else %}
+  <label>{% for option in product.options %}{{- option | strip | remove: " " -}}{% unless forloop.last%}<span class="">/</span>{% endunless%}{% endfor %}</label>
+  {% endif %}
     <select class="single-option-selector related-popup-variant {% if hide_default_title %}hiddeen {% endif %}" name="related-popup-variant" id="gnmabvh">
-     
         {% for variant in  product.variants %}
             {% if variant.available == true %}
-      <option  data-myprice="{{variant.price | money}}" value="{{ variant.id }}" data-img="{% if variant.image.src  %}{{ variant.image | img_url: grid_image_width, crop: 'center' }}{% endif %}">{{ variant.title }}</option>
+      <option data-myprice="{{variant.price | money}}" value="{{ variant.id }}" data-img="{% if variant.image.src  %}{{ variant.image | img_url: grid_image_width, crop: 'center' }}{% endif %}">{{ variant.title | remove: " " }}</option>
             {% endif %}
         {% endfor %}
     </select>
@@ -114,7 +116,7 @@
             {% endif %}
         {% endfor %}
         <button type="submit" class="btn medium-up--five-eighths related-popup-add-to-cart" data-variant="{{ pp_id }}" onclick="custom_addcart(this)">
-            <span class="r_AddToCartText">Add to cart</span>
+            <span class="r_AddToCartText">{{ 'general.crossell.add_to_cart' | t  }}</span>
         </button>
     </div>
 

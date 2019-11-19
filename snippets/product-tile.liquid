@@ -1,4 +1,4 @@
- 
+
  {% assign on_sale = false %}
 {% if product.compare_at_price > product.price %}
   {% assign on_sale = true %}
@@ -25,7 +25,8 @@
 {% assign displayquantity = 0 %}
 {% assign startdate = product.published_at | date: "%m/%d/%Y %H:%M:%S" %}
 {% assign size_chart_page = settings.sizing_chart_page %}
-{% for tag in product.tags %}  
+{% for tag in product.tags %}
+    {% assign tag = tag | downcase %}
   {% if tag == "view-size-chart" %}{% assign view_size_chart = true %}{% endif %}
   {% if tag == "display-countdown" %}{% assign display_countdown = true %}{% endif %}
   {% if tag == "display-limited" %}{% assign display_limited = true %}{% endif %}
@@ -41,7 +42,7 @@
 <div class="grid__item {{ product_list_class }} custom--width-one-half product-tile-container wishlist-tile-container" data-product-id="{{ product.id }}" data-product-handle="{{ product.handle }}">
 
   <div class="grid__product-image text-center">
-    
+
     {% if settings.collections_quickview %}
       <div class="quickview {% if settings.product_layout_option == "product_one" %}quick_amount_one{% endif %}">
         <a href="{{ product.id }}_{{ type }}" data-href="{{ product.id }}_{{ type }}" class="btn quick-shop"  data-no-instant>Quick Buy</a>
@@ -93,13 +94,13 @@
       {% endif %}
     </a>
   </div>
-  
 
-  
+
+
   <div class="grid__product-content text-center category_detail">
-    
-   
-    
+
+
+
     <h4>
       <a href="{{ product.url | within: collection }}">{{ product.title }}{% comment %}{{ product.title | truncate: 25 }}{% endcomment %}</a>
     </h4>
@@ -119,23 +120,23 @@
       {% if settings.show_saved_amount %}
         {% if product.compare_at_price > product.price %}
           {% if settings.product_layout_option == "product_two" %}
-            <div class="save_amount_two">SAVE <span class='money'>{{ product.compare_at_price | minus: product.price | money }}</span></div>
+            <div class="save_amount_two">SAVE <span class='money'>{{ product.compare_at_price | minus: product.price | round | money }}</span></div>
           {% endif %}
           {% if settings.product_layout_option == "product_three" %}
-          	<div class="save_amount_three">-{{ product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price  | round: 2  }}%</div>
+          	<div class="save_amount_three">-{{ product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price  | round  }}%</div>
           {% endif %}
       	  {% if settings.product_layout_option == "product_four" %}
-          	<div class="save_amount_four">SAVE {{ product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price  | round: 2  }}%</div>
+          	<div class="save_amount_four">SAVE {{ product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price  | round  }}%</div>
           {% endif %}
         {% endif %}
       {% endif %}
        </h5>
     </div>
-    
+
     {% if settings.display_review_star_collection %}
       <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
     {% endif %}
-    {% if settings.enable_product_progressbar and settings.show_progressbar_on_cands and product.available %}
+    {% if settings.product_flash_sold_enable_demo_data and settings.enable_product_progressbar and settings.show_progressbar_on_cands and product.available %}
       {% assign inventory_quantity = 0 %}
       {% for variant in product.variants %}
     	{% capture inventory_quantity %}
@@ -144,7 +145,7 @@
       {% endfor %}
       {% if quantity == 0 %}
         {% assign quantity = 100 %}
-      {% else %}	
+      {% else %}
         {% assign quantity = quantity | times: 1 %}
       {% endif %}
       {% if qty_sold == 0 %}
@@ -168,7 +169,7 @@
     				{% assign remaining = remaining | plus: 1 %}
     				{% assign remaining = remaining | append: '00' %}
     				{% assign quantity = remaining | times: 1 %}
-    			  {% else %}	
+    			  {% else %}
     				{% assign quantity = quantity | plus: totalSold | times: 1 %}
     			  {% endif %}
     			{% endif %}
@@ -178,9 +179,9 @@
     	{% endif %}
       {% else %}
     	{% assign defaultSold = qty_sold | times: 1 %}
-    	{% if settings.display_quantity_count_real %}
+    	{% if settings.display_quantity_count_demo_data %}
     	  {% assign totalSold = inventory_quantity | plus: defaultSold %}
-    	{% else %}	
+    	{% else %}
     	  {% assign totalSold = defaultSold %}
     	{% endif %}
     	{% if totalSold >= quantity %}
@@ -198,27 +199,30 @@
           {% assign totalSold = quantity %}
         {% endunless %}
         {% assign qtyleft = quantity | minus: totalSold %}
-     
+
         <div class="progress progress-striped" data-qty="{{ quantity }}" data-total="{{ totalSold }}"><div class="progress-bar"></div></div>
-       <p style="margin: 0;"><small>{{ 'products.progress_bar.limited_edition' | t }}: {{ 'products.progress_bar.only' | t }} <span class="danger">{% if qtyleft > 0 %}{{ qtyleft }}{% else %}{{ limited_default }}{% endif %}</span> {{ 'products.progress_bar.left' | t }}.</small></p>  
+       <p style="margin: 0;"><small>{{ 'products.progress_bar.limited_edition' | t }}: {{ 'products.progress_bar.only' | t }} <span class="danger">{% if qtyleft > 0 %}{{ qtyleft }}{% else %}{{ limited_default }}{% endif %}</span> {{ 'products.progress_bar.left' | t }}.</small></p>
     {% else %}
         {% unless product.available %}
           {% assign totalSold = quantity %}
         {% endunless %}
         <div class="progress progress-striped" data-qty="{{ quantity }}" data-total="{{ quantity  | minus: totalSold}}"><div class="progress-bar"></div></div>
-     <p style="margin: 0;"><small>{{ totalSold }}{% if settings.enable_total_quantity %} of {{ quantity }}{% endif %} {{ 'products.progress_bar.sold' | t }}</small></p>
-        
+     <p style="margin: 0;"><small>{{ totalSold }}{% if settings.product_flash_sold_enable_demo_data and settings.enable_total_quantity %} of {{ quantity }}{% endif %} {{ 'products.progress_bar.sold' | t }}</small></p>
+
     {% endif %}
     {% endif %}
+      {% if settings.informations_alert_enable %}
+          {% include 'product-informations-alert' %}
+      {% endif %}
      <div class="product-tile--tile-actions flex">
         {% include 'wishlist-button'%}
        </div>
   </div>
-  
+
   <script id="product-json-{{product.id}}_{{ type }}" type="text/template"  data-no-instant>{{product | json}}</script>
   <script id="product-template-{{product.id}}_{{ type }}" type="text/template" data-no-instant>
     <span class="close-quickview"><i class="fa fa-times"></i></span>
-    <div class="quickview-form">
+    <div class="quickview-form popup-product">
       <div class="grid product-single" style=" visibility: hidden;">
         <div class="grid__item large--two-fifths text-center product--images">
           <div class="product-single__photos">
@@ -277,7 +281,7 @@
           <a href="{{ product.url | within: collection }}" class="btn--secondary">{{ 'products.general.full_detail_button_text' | t }}</a>
         </div>
 
-        <div class="grid__item large--three-fifths pr35">
+        <div class="grid__item large--three-fifths">
           <h1 itemprop="name">{{ product.title }}</h1>
           <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
             <meta itemprop="priceCurrency" content="{{ shop.currency }}" />
@@ -376,11 +380,11 @@
               {% endif %}
             </div>
             </form>
-            {% if settings.enable_product_progressbar and product.available %}
+            {% if settings.product_flash_sold_enable_demo_data and settings.enable_product_progressbar and product.available %}
               <div class="grid">
                 <div class="grid__item large--one-whole progress--bar">
                  {% if settings.enable_progressbar_text %}
-               		<div class="header">{{ settings.enable_progressbar_text_value }}</div>                
+               		<div class="header">{{ settings.enable_progressbar_text_value }}</div>
               	{% endif %}
                   {% assign inventory_quantity = 0 %}
                   {% for variant in product.variants %}
@@ -390,7 +394,7 @@
                   {% endfor %}
                   {% if quantity == 0 %}
                     {% assign quantity = 100 %}
-                  {% else %}	
+                  {% else %}
                     {% assign quantity = quantity | times: 1 %}
                   {% endif %}
                   {% if qty_sold == 0 %}
@@ -414,7 +418,7 @@
                                 {% assign remaining = remaining | plus: 1 %}
                                 {% assign remaining = remaining | append: '00' %}
                                 {% assign quantity = remaining | times: 1 %}
-                              {% else %}	
+                              {% else %}
                                 {% assign quantity = quantity | plus: totalSold | times: 1 %}
                               {% endif %}
                             {% endif %}
@@ -424,9 +428,9 @@
                     {% endif %}
                   {% else %}
                     {% assign defaultSold = qty_sold | times: 1 %}
-                    {% if settings.display_quantity_count_real %}
+                    {% if settings.display_quantity_count_demo_data %}
                       {% assign totalSold = inventory_quantity | plus: defaultSold %}
-                    {% else %}	
+                    {% else %}
                       {% assign totalSold = defaultSold %}
                     {% endif %}
                     {% if totalSold >= quantity %}
@@ -451,8 +455,11 @@
                       {% assign totalSold = quantity %}
                     {% endunless %}
                     <div class="progress progress-striped" data-qty="{{ quantity }}" data-total="{{ totalSold }}"><div class="progress-bar"></div></div>
-                    <p class="remaining--text"><span class="quantity">{{ totalSold }}</span>{% if settings.enable_total_quantity %} of <span class="quantity">{{ quantity }}</span>{% endif %} {{ 'products.progress_bar.sold' | t }}</p>
+                    <p class="remaining--text"><span class="quantity">{{ totalSold }}</span>{% if settings.product_flash_sold_enable_demo_data and settings.enable_total_quantity %} of <span class="quantity">{{ quantity }}</span>{% endif %} {{ 'products.progress_bar.sold' | t }}</p>
                   {% endif %}
+                    {% if settings.informations_alert_enable %}
+                        {% include 'product-informations-alert' %}
+                    {% endif %}
                 </div>
               </div>
             {% endif %}
@@ -493,10 +500,10 @@
       {% endif %}
     {% endif %}
   </script>
-  
+
 </div>
 
 
-     
- 
- 
+
+
+

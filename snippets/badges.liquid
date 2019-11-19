@@ -1,6 +1,7 @@
   {% assign badgestyle = "topright" %}
   {% assign badge = false %}
   {% for tag in product.tags %}
+      {% assign tag = tag | downcase %}
     {% if tag contains "badgestyle-" %}{% capture badgestyle %}{{ tag | replace: "badgestyle-","" }}{% endcapture %}{% endif %}
 	{% if tag contains "badge-" %}{% capture badge %}{{ tag | replace: "badge-","" }}{% endcapture %}{% endif %}
   {% endfor %}

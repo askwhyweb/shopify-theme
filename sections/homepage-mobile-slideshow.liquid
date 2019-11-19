@@ -1,4 +1,5 @@
-  <div class="container-fluid  ">
+{% if section.blocks.size > 0 %}
+<div class="container-fluid  ">
     <div class="row">
       <div class="containerc">
         <div class="mobile-banner-slider">
@@ -12,7 +13,9 @@
                             {% if block.settings.image == blank %}
         {{ 'lifestyle-1'  | placeholder_svg_tag: 'placeholder-svg' }}
         {%else%}
-                 <img src="{{ block.settings.image | img_url: '2048x' }}" class="img-responsive lazy"  data-original="{{ product-block.featured_image | product_img_url: image_size }}" alt="{{ product-block.featured_image.alt }}" height="562" width="1410"> 
+                 <img src="{{ block.settings.image | img_url: '100x', format: 'pjpg'}}"
+                      
+                      data-src="{{ block.settings.image | img_url: '1048x', format: 'pjpg' }}" class="img-responsive lazyload"  data-original="{{ product-block.featured_image | product_img_url: image_size }}" alt="{{ product-block.featured_image.alt }}" height="562" width="1410"> 
                 
                   <div class='banner-text id-{{block.id}} v-{{ block.settings.heading_vertical_pos }}--h-{{ block.settings.horizontal_vertical_pos }}'>
                
@@ -48,11 +51,19 @@
       </div>
     </div>
   </div>
+{% endif %}
 
 <style>
  .mobile-banner-slider .banner-text h2{color:{{section.settings.headingcolor}};font-size:{{section.settings.headingfontsize}};font-weight:{{section.settings.headingfontweight}};}
   .mobile-banner-slider .banner-text p{color:{{section.settings.subheadingcolor}};font-size:{{section.settings.subheadingfontsize}};font-weight:{{section.settings.subheadingfontweight}};}
   .mobile-banner-slider .banner-text .btn-default{color:{{section.settings.buttontextcolor}}!important;background:{{section.settings.buttonbgcolor}}!important;border:none;font-size:{{section.settings.buttonfontsize}};font-weight:{{section.settings.buttonfontweight}};width:auto;}
+
+  {% if section.settings.bottompadding %}
+ 
+  .mobile-banner-slider.owl-carousel.owl-theme.owl-loaded {
+    margin-bottom: 0;
+}
+  {% endif %}
 </style>
 {% schema %}
 {
@@ -75,6 +86,11 @@
 "id": "fullwidth",
 "label": "Make Slider Full Width" 
 },
+{
+"type": "checkbox",
+"id": "bottompadding",
+"label": "Disable Bottom Padding" 
+},
  {
 "type": "color",
 "id": "headingcolor",
@@ -87,36 +103,48 @@
         "label": "Slide Heading Font Size",
         "options": [
           {
-            "value": "30px",
-            "label": "30px"
+            "value": "10px",
+            "label": "10px"
           },
           {
-            "value": "35px",
-            "label": "35px"
+            "value": "12px",
+            "label": "12px"
           },
           {
-            "value": "40px",
-            "label": "40px"
+            "value": "14px",
+            "label": "14px"
           },
           {
-            "value": "45px",
-            "label": "45px"
+            "value": "16px",
+            "label": "16px"
           },
           {
-            "value": "50px",
-            "label": "50px"
+            "value": "18px",
+            "label": "18px"
           },
           {
-            "value": "55px",
-            "label": "55px"
+            "value": "20px",
+            "label": "20px"
           },
           {
-            "value": "60px",
-            "label": "60px"
+            "value": "22px",
+            "label": "22px"
           },
 {
-            "value": "65px",
-            "label": "65px"
+            "value": "24px",
+            "label": "24px"
+          },
+{
+            "value": "26px",
+            "label": "26px"
+          },
+          {
+            "value": "28px",
+            "label": "28px"
+          },
+          {
+            "value": "30px",
+            "label": "30px"
           }
         ],
         "default": "30px"
@@ -141,8 +169,12 @@
             "label": "12px"
           },
           {
-            "value": "15px",
-            "label": "15px"
+            "value": "14px",
+            "label": "14px"
+          },
+          {
+            "value": "16px",
+            "label": "16px"
           },
           {
             "value": "18px",
@@ -153,19 +185,55 @@
             "label": "20px"
           },
           {
-            "value": "25px",
-            "label": "25px"
-          },
-          {
-            "value": "30px",
-            "label": "30px"
+            "value": "22px",
+            "label": "22px"
           },
 {
-            "value": "35px",
-            "label": "35px"
+            "value": "24px",
+            "label": "24px"
           }
         ],
-        "default": "20px"
+        "default": "18px"
+      },
+{
+        "type": "select",
+        "id": "buttonfontsize",
+        "label": "Slide Button Font Size",
+        "options": [
+          {
+            "value": "10px",
+            "label": "10px"
+          },
+          {
+            "value": "12px",
+            "label": "12px"
+          },
+          {
+            "value": "14px",
+            "label": "14px"
+          },
+          {
+            "value": "16px",
+            "label": "16px"
+          },
+          {
+            "value": "18px",
+            "label": "18px"
+          },
+          {
+            "value": "20px",
+            "label": "20px"
+          },
+          {
+            "value": "22px",
+            "label": "22px"
+          },
+{
+            "value": "24px",
+            "label": "24px"
+          }
+        ],
+        "default": "18px"
       },
 
 

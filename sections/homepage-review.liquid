@@ -10,20 +10,20 @@
 					<div class="testimonial-author clearfix">
 						<div class="testimonial-author-thumbnail img-thumbnail">
 							    {% if block.settings.image == blank %}
-        
-        	<img src="{{'transparent.png' | asset_url}}" 
-                 
+
+        	<img src="{{'transparent.png' | asset_url}}"
+
                   data-src="{{'footer_review_1_1.png' | asset_url}}"
  data-widths="[540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048]"
  data-aspectratio="{{'footer_review_1_1.png' | asset_url}}"
  data-sizes="auto"
  data-parent-fit="contain"
                  height="89" width="89" alt="" class="lazyload img-rounded">
-						
+
         {%else%}
 							<img src="{{'transparent.png' | asset_url}}"
-                                 
-                                 
+
+
                                   data-src="{{ block.settings.image | img_url: 'master' }}"
  data-widths="[540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048]"
  data-aspectratio="{{ block.settings.image | img_url: 'master' }}"
@@ -36,31 +36,54 @@
 						 	<p class="blockquote">{{ block.settings.quote }}</p>
 						     <p class="autor_name">{{ block.settings.autor_name }}</p>
 						 </div>
-					</div>		
+					</div>
 				</div>
               {% endfor %}
-			 
+
 			</div>
    <style>
- {% if dTotalrev <= 3 %}
-       
+      .reviewsssections {
+        margin-bottom: 25px;
+      }
+
+      @media screen and (max-width:768px) {
+        .testimonial-author .blockquote {
+          font-size: {{section.settings.author_mobile_font_size}};
+        }
+      }
+       {% if settings.arrow_style == 'Left-Right' %}
+           @media screen and (min-width:1294px) {
+               .testimonial_wrap > .owl-controls  > .owl-nav > .owl-prev {
+                   left: -4%;
+               }
+               .testimonial_wrap > .owl-controls  > .owl-nav > .owl-next {
+                   right: -4%;
+                   position: absolute !important;
+                   top: 45%;
+               }
+           }
+       {% endif %}
+
+
+       {% if dTotalrev <= 3 %}
+
           @media screen and (min-width:992px){
           #sec{{ section.id }} .owl-nav {
             display: none !important;
           }
           }
-        
+
         {% endif %}
 {% if dTotalrev <= 1 %}
-         
+
           @media screen and (max-width:992px){
           #sec{{ section.id }} .owl-nav {
             display: none !important;
           }
           }
-        
+
         {% endif %}
-     
+
        div#shopify-section-homepage-review {
     background: {{section.settings.footer_review_bg_color}};
     color: {{section.settings.footer_review_font_color}};
@@ -72,14 +95,12 @@
   }
   .testimonial_wrap{margin-bottom: 65px;}
   .testimonial-author .testimonial_right p.autor_name {color: {{section.settings.footer_review_author_color}}};
-
-   
 </style>
-	</div>	
+	</div>
 {% endif%}
 {% endif%}
- 
- 
+
+
 {% schema %}
   {
     "name": "homepage-review",
@@ -92,7 +113,7 @@
 {
         "type": "checkbox",
         "id": "footer_reviews_homepage_only",
-        "label": "Show Review section In Homepage Only" 
+        "label": "Show Review section In Homepage Only"
       },
   {
         "type": "checkbox",
@@ -103,7 +124,7 @@
       {
         "type": "text",
         "id": "section_title",
-        "label": "section_title" 
+        "label": "section_title"
       } ,
 {
         "type": "header",
@@ -127,23 +148,26 @@
         "label": "Font Color",
         "default": "#000000"
       },
-       
+
       {
         "type": "color",
         "id": "footer_review_title_color",
         "label": "Title Font Color",
         "default": "#f0723d"
       },
-    {
+      {
         "type": "color",
         "id": "footer_review_author_color",
         "label": "Author Font Color",
         "default": "#f0723d"
+      },
+      {
+        "type": "text",
+        "id": "author_mobile_font_size",
+        "label": "Mobile Font Size",
+        "default": "18px"
       }
-      
-      
     ],
-     
     "blocks": [
       {
         "type": "image",
@@ -166,15 +190,15 @@
             "id": "autor_name",
             "label": "Review User Name"
           }
-         
-          
+
+
         ]
       }
-      
+
     ],
     "presets": [{
       "name": "homepage-review"
-       
+
     }]
   }
 {% endschema %}
