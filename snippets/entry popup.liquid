@@ -1,0 +1,80 @@
+ 
+<div id="Purchase-popup" class="clock-popup mfp-hide">
+  <button title="Close (Esc)" type="button" class="mfp-close" id="mfp-closeid-entry"><i class="fa fa-times"></i></button>
+  <div class="clock-popup-inner">
+    {% if settings.showlogopopup %}
+      <img class="lazyload limn" src="{{'transparent.png' | asset_url}}" 
+            data-src="{{'popuplogo.png' | asset_url}}"
+ data-widths="[540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048]"
+ data-aspectratio="{{'popuplogo.png' | asset_url}}"
+ data-sizes="auto"
+ data-parent-fit="contain"
+           >
+    {% endif %}
+    <h2>{{settings.entrypopup_heading}}</h2>
+    <p class="ptag">{{settings.entrypopup_text}}</p>
+    <div id="rC_A" class="redCountdownDemo"></div>
+    <div class="popup_newsletter">
+      {% if settings.usingmailchimp %}
+        <form action="{{settings.mailchimpformurl}}" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate="">
+          <div class="input-group">
+            <input type="email" name="EMAIL" class="form-control" placeholder="Email Address">
+            <span class="input-group-btn">
+              <button  name="ftentry" class="btn btncookiepur" type="button">{{settings.entrypopup_button}}</button>
+            </span> 
+          </div>
+        </form>
+      {% elsif settings.klaviyoform %}
+      	{{ settings.klaviyohtml }}
+      {% else %}
+        {% form 'customer' %}
+          {{ form.errors | default_errors }}
+          {% if form.posted_successfully? %}
+            <div class='coupon-code'>
+              <div class='w70'><p class='thank-msg'> {{ settings.newslatter_coupan }} </p>
+                {% if settings.coupan != '' %}  
+                  <p class='coupon-text'>Here is your Coupon Code:<input type="text" value="{{ settings.coupan }}" id="coupan_code"></p>
+                {% endif %}
+              </div>
+              {% if settings.coupan != '' %} 
+                <div class='w30'><p class='save-txt'>Save 10%</p><p class='copy-div'><span class="button_text">copy code</span></p></div>
+              {% endif %} 
+            </div>
+          {% else %}
+            <div class="input-group">
+              <input required type="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="Email Address" name="contact[email]" id="Email" class="form-control"  aria-label="{{ 'general.newsletter_form.newsletter_email' | t }}" autocorrect="off" autocapitalize="off">
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <span class="input-group-btn">
+                <button  name="ftentry" class="btn btncookiepur" type="submit">{{settings.entrypopup_button}}</button>
+              </span>
+            </div>  
+          {% endif %}
+        {% endform %}
+      {% endif %}
+    </div>
+    {% if settings.termscheck %}
+      <br>
+      <p class="checktext"><label for="footercheckentry"><input type="checkbox" id="footercheckentry"> {{ settings.termstext }} <a target="_blank" href="{{ settings.termstextlink }}">{{ settings.termslinktext }}</a></label></p>
+      <script>
+        $('.btncookiepur').click(function () {
+          if ($('#footercheckentry').is(':checked')) {
+            $(this).submit();
+            $.magnificPopup.close();
+          } else {
+            alert('{{ settings.termstext_warning }}');
+            return false;
+          }
+        });
+      </script>
+    {% endif %}
+    <ul class="deals">
+      {{settings.entrypopup_bottomtext}}
+    </ul>
+  </div>
+</div>
+<style>
+  img.limn { max-width: 400px; margin-bottom: 19px; }
+  #Purchase-popup .mfp-close{line-height:0 !important;display: block; text-align: center;}
+  #Purchase-popup .mfp-close:hover {color:#000 !important; border-color:#000;}
+  .redCountdownDays { display: none!important; }
+</style>

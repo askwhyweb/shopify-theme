@@ -1,0 +1,50 @@
+<div class="wrapper">
+  {% include 'breadcrumb' %}
+  {% unless settings.collections_products %}
+  	<div class="section-header">
+      <p class="h1 section-header__left">{{ 'collections.general.title' | t }}</p>
+    </div>
+  {% endunless %}
+  {% for link in linklists.all-collections.links %}
+  	{% assign collection = link.object %}
+  	{% if settings.collections_products %}
+      {% unless collection.handle == 'frontpage' %}
+        {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
+        <div class="section-header">
+          <p class="h1 section-header__left">{{ collection_title }}</p>
+          <div class="section-header__right">
+            <a href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}">More {{ collection_title }} &rsaquo;</a>
+          </div>
+        </div>
+
+        <div class="grid-uniform">
+          {% for product in collection.products limit:4 %}
+            {% assign grid_item_width = 'large--one-fifth medium--one-half' %}
+            {% include 'product-grid-item' %}
+          {% endfor %}
+        </div>
+        {% unless forloop.last %}<hr>{% endunless %}
+      {% endunless %}
+    {% else %}
+  	  {% unless collection.handle == 'frontpage' %}
+        <div class="grid__item large--one-quarter medium--one-half custom--width-one-half collection-list">
+          <div class="grid__product-image text-center">
+            <a href="{{ collection.url }}" class="grid__image">
+              {% if collection.image %}
+                {{ collection.image.src | collection_img_url: 'grande' | img_tag: collection_title }}
+              {% else %}
+                {{ collection.products.first.featured_image | product_img_url: 'grande' | img_tag: collection_title }}
+              {% endif %}
+            </a>
+          </div>
+
+          <div class="grid__product-content text-center">
+            <p class="h5">
+              <a href="{{ collection.url }}">{{ collection.title }} <p>{{ 'collections.general.items_with_count' | t: count: collection.products_count }}</p></a>
+            </p>
+          </div>
+        </div>
+  	  {% endunless %}
+  	{% endif %}
+  {% endfor %}
+</div>

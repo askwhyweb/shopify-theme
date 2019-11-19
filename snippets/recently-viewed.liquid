@@ -1,0 +1,83 @@
+{% if settings.show_recent_products %}
+{{ 'jquery.tmpl.min.js' | asset_url | script_tag }}
+{{ 'jquery.products.min.js' | asset_url | script_tag }}
+<div id="recently-viewed-container" class="recently--viewed-products" style="display: none;">
+  <div class="container">
+    <h2 class=" section_title">{{settings.recent_products_heading}}</h2>
+  	<div class="category_wrap1 owl-carousel" id="recently-viewed-products"></div>
+  </div>
+</div>
+{% raw %}
+<script id="recently-viewed-product-template" type="text/x-jquery-tmpl">
+<div class="grid__item large--one-quarter medium--one-half">
+  <div class="grid__product-image text-center">
+  	<a href="${url}" class="grid__image">
+      <img alt="${title}" src="${Shopify.Products.resizeImage(featured_image, "large")}" class="main-image img-responsive" />
+  	</a>
+  </div>
+  <div class="grid__product-content text-center">
+  	<div class="price-section">
+      {{if compare_at_price > price}}
+      	<strike class="on_price">${compare_at_price}</strike>
+        <span class="price on_price">${price}</span>
+      {{else}}
+      	<span class="price on_price no-compare-price">${price}</span>
+      {{/if}}
+    </div>
+    <p class="h5">
+      <a href="${url}">${title}</a>
+    </p>
+  </div>
+</div>
+</script>
+{% endraw %}
+<script type="text/javascript">
+  Shopify.Products.showRecentlyViewed({
+    howManyToShow: {{settings.recent_products_number_of}},
+    onComplete: function() {
+      setTimeout(function(){
+        jQuery('#recently-viewed-products .on_price').each(function(){
+          var t = jQuery(this);
+          var p = t.text();
+          t.html(Shopify.formatMoney(p, window.money_format));
+        });
+        if ($('#recently-viewed-products .grid__item').length) {
+          $('#recently-viewed-container').show();
+          $("#recently-viewed-products").owlCarousel({
+            items: 1,
+            autoplay: true,
+            loop: true,
+            autoPlaySpeed: 5000,
+            autoPlayTimeout: 5000,
+            autoplayHoverPause: true,
+            nav:true,
+            navText:["<span class='fa fa-angle-left'></span>", "<span class='fa fa-angle-right'></span>"],
+            responsive: {
+              0: {
+                items: 2,
+                slideBy: 2
+              },
+              650: {
+                items: 2,
+                slideBy: 2
+              },
+              980: {
+                items: 3,
+                slideBy: 3
+              },
+              1220: {
+                items: 4,
+                slideBy: 4
+              }
+            }
+          });
+        } else {
+          $('#recently-viewed-container').remove();
+          $('.recently--viewed-hr').remove(); 
+        }
+      }, 1000);
+  	}
+  });
+  Shopify.Products.recordRecentlyViewed();
+</script>
+{% endif %}

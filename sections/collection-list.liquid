@@ -1,0 +1,104 @@
+	<div class="container-fluid">
+		<div class="row">
+			<div class="container">
+  {% if section.settings.title != blank %}
+    <h2 class="section_title">{{ section.settings.title | escape }}</h2>
+     
+  {% endif %}
+
+  {% case section.settings.grid %}
+    {% when 2 %}
+      {%- assign grid_item_width = 'col-sm-6' -%}
+    {% when 3 %}
+      {%- assign grid_item_width = 'col-sm-4' -%}
+    {% when 4 %}
+      {%- assign grid_item_width = 'col-sm-3' -%}
+     
+  {% endcase %}
+
+  <div class="category_wrap_collection cust_collection">
+  
+      {% for block in section.blocks limit: section.blocks.size %}
+        
+    <div class="col-sm-4 slide-new collection_img_adj" {{ block.shopify_attributes }}>
+          {%- assign collection = collections[block.settings.collection] -%}
+          {% include 'collection-grid-item' %}
+        </div>
+      {% endfor %}
+  
+  </div>
+
+  {% if section.blocks.size == 0 %}
+    {% include 'no-blocks' %}
+  {% endif %}
+</div>
+      </div>
+</div>
+ 
+<style>
+  {% if section.settings.hidetitle == true %}
+  h3.collection-grid-item__title{display:none;}
+  {% endif %}
+</style>
+{% schema %}
+  {
+    "name": "Collection list",
+    "class": "index-section",
+    "max_blocks": 12,
+    "settings": [
+ {
+"type": "paragraph",
+"content": "This section displays a row of collections in a carousel."
+},
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Collection list"
+      },
+ {
+        "type": "checkbox",
+        "id": "hidetitle",
+        "label": "Hide collection title",
+        "default": false
+      }
+      
+    ],
+    "blocks": [
+      {
+        "type": "featured_collection",
+        "name": "Collection",
+        "settings": [
+          {
+            "label": "Collection",
+            "id": "collection",
+            "type": "collection"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Collection list",
+        "category": "Collection",
+        "blocks": [
+          {
+            "type": "featured_collection"
+          },
+          {
+            "type": "featured_collection"
+          },
+          {
+            "type": "featured_collection"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
+
+<style>
+  .collection-grid-item__title-wrapper {
+    text-align: center;
+}
+</style>

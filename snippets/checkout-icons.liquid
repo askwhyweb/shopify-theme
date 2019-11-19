@@ -1,0 +1,20 @@
+<div class="checkout-images">
+  {% if settings.ff-checkout-visa-enable %}
+    <img src="{{ 'ff-checkout-visa.png' | asset_url }}" alt="Image of ff-checkout-visa" class="checkout-image no-border ratina-img" />
+  {% endif %}
+  {% if settings.ff-checkout-mastercard-enable %}
+    <img src="{{ 'ff-checkout-mastercard.png' | asset_url }}" alt="Image of ff-checkout-mastercard" class="checkout-image no-border ratina-img" />
+  {% endif %}
+  {% if settings.ff-checkout-americanexp-enable %}
+    <img src="{{ 'ff-checkout-americanexp.png' | asset_url }}" alt="Image of ff-checkout-americanexp" class="checkout-image no-border ratina-img" />
+  {% endif %}
+  {% if settings.ff-checkout-paypal-enable %}
+    <img src="{{ 'ff-checkout-paypal.png' | asset_url }}" alt="Image of ff-checkout-paypal" class="checkout-image no-border ratina-img" />
+  {% endif %}
+  {% if settings.ff-checkout-discover-enable %}
+    <img src="{{ 'ff-checkout-discover.png' | asset_url }}" alt="Image of ff-checkout-discover" class="checkout-image no-border ratina-img" />
+  {% endif %}
+  {% if settings.ff-checkout-shopify-enable %}
+    <img src="{{ 'ff-checkout-shopify.png' | asset_url }}" alt="Image of ff-checkout-shopify" class="checkout-image no-border ratina-img" />
+  {% endif %}
+</div>

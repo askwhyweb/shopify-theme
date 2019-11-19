@@ -1,0 +1,26 @@
+{% comment %}
+The contents of the product.liquid template can be found in /sections/product-template.liquid
+{% endcomment %}
+<script language="javascript"  data-no-instant>
+  function emailCurrentPage(){
+    var txt1 = "Check out this site!";
+    window.location.href="mailto:?subject="+txt1+"&body="+escape(window.location.href);
+  }
+</script>
+<style>
+    .p-tag--buy-div {
+    text-align: center;
+}
+  .progress.progress-striped {margin: 0;}
+</style>
+{% section 'product-template' %}
+ {% if settings.cross_sell %}
+  {% include 'releted_upsell_popup' %}
+{% endif %}
+{% if settings.stickycartenable %}
+<style>
+.cart__footer-icon.in {
+    display: none;
+}
+</style>
+{% endif %}

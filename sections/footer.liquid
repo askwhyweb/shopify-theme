@@ -1,0 +1,308 @@
+{% if settings.coupan != '' %} 
+<style>
+
+  .coupon-code div {
+    min-height: 63px;
+  }
+
+  .w70  input {
+    padding: 0;
+    display: inline-block;
+    width: 34%;
+    border: 0;
+    background: transparent;
+    padding-left: 3px;
+    z-index: -1;
+  }
+
+  .w70 {
+    width: 70%;
+    float: left;
+    background: #fff;
+    color: #000;
+  }
+
+  .w30 {
+    width: 30%;
+    float: right;
+    background: #41c54f;
+    border-style: dotted;
+    border-right: 0;
+    border-top: 0;
+    border-bottom: 0;
+  }
+  .coupon-code div{
+    padding:10px 0px 0px 10px;
+  }
+
+  .w70  p {
+    color: #414141;
+    font-size: 16px;
+    margin-bottom: 9px;
+  }
+  .w30 .save-txt {
+    margin-bottom: 4px;
+  }
+  .copy-div{
+    margin-bottom: 9px;
+  }
+  .w70  .thank-msg {
+    font-weight: bold;
+    margin-bottom: 4px;
+    font-size: 20px;
+  }
+  .save-txt {
+    font-weight: bold;
+    margin-bottom: 4px;
+    font-size: 20px !important;
+    text-transform: uppercase;
+  }
+  .button_text {
+    padding: 2px 8px;
+    background: rgb(52,171,73);
+    border-radius: 14px;
+    cursor: pointer;
+  }
+
+</style>
+{% else %}
+<style>
+  .w70 {
+    width: 100%;
+    background: #fff;
+    color: #000;
+  }
+
+  .w70  .thank-msg {
+    font-weight: bold;
+
+    font-size: 20px;
+  }
+
+  .w70  p {
+    color: #414141;
+    font-size: 16px;
+
+  }
+
+  .coupon-code div{
+    padding:10px 0px 6px 10px;
+  }
+
+</style>
+ {% endif %}
+
+<!-- 	<section class="container-fluid customber_service">
+		<div class="row">
+			<div class="container">
+				<div  class="col-md-6">
+					<div class="media">
+					  <div class="media-left media-middle">
+					    <img src="{{'gaurntee-logo.png' | asset_url}}" height="122" width="122" class="media-object" >
+					  </div>
+					  <div class="media-body">
+					    <h3>Unhappy with your product? We’ll Take It Back!</h3>
+					    <p>We stand by our high-quality products and your satisfaction is 100% guaranteed.</p>
+					  </div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<h3>Secure Checkout</h3>
+					<p>We use encrypted SSL security to ensure that credit card information is 100% protected.</p>
+					<a href="javascript:;"><img src="{{'payment-logo.png' | asset_url}}" class="img-responsive payment_logo" height="25" width="318"></a>
+				</div>
+			</div>
+		</div>
+	</section> -->
+{% if settings.footer_first_row_display %}
+  {% assign first_block = "one-half left table--layout-footer" %}
+  {% assign second_block = "one-half right" %}
+  {% if settings.footer_guarantee_box_display and settings.footer_checkout_display %}
+    {% assign first_block = "one-half left table--layout-footer" %}
+    {% assign second_block = "one-half right" %}
+  {% else %}
+    {% assign first_block = "one-whole table--layout-footer" %}
+    {% assign second_block = "one-whole" %}
+  {% endif %}
+
+  <div class="first-footer">
+    <div class="container">
+      
+      {% if settings.footer_guarantee_box_display %}
+        <div class="{{ first_block }}"> 
+          <div class="two-fifths table--layout-left ff-image">
+            <img src="{{'transparent.png' | asset_url }}"
+                 data-src="{{ 'footer-image.png' | asset_img_url: '150x'  }}"
+ data-widths="[540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048]"
+ data-aspectratio="{{ 'footer-image.png' | asset_img_url: '150x'  }}"
+ data-sizes="auto"
+ data-parent-fit="contain"
+                 alt="Image of footer-image" class="lazyload footer-image no-border ratina-img" />
+          </div>
+          <div class="three-fifths table--layout-right ff-image-text">
+            <h3>{{ settings.guarantee_box_heading_text }}</h3>
+            <p>{{ settings.guarantee_box_info_text }}</p>
+          </div>
+        </div>
+      {% endif %}
+      {% if settings.footer_checkout_display %}
+        {% if settings.footer_checkout_single %}
+      	  <div class="{{ second_block }}">
+              <div class="one-sixth left">&nbsp;</div>
+              <div class="five-sixths left">
+                <div class="ff-checkout">
+                  <h3 class="with-lock-bg">{{ settings.checkout_box_heading_text }}</h3>
+                  <p style="margin-bottom: 5px;">{{ settings.checkout_box_info_text }}</p>
+                  <img alt="Checkout Secure" src="{{ 'transparent.png' | asset_url}}" 
+                       data-src="{{ 'ff-checkout-single.png' | asset_url  }}"
+ data-widths="[540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048]"
+ data-aspectratio="{{ 'ff-checkout-single.png' | asset_url  }}"
+ data-sizes="auto"
+ data-parent-fit="contain"
+                       class="lazyload no-border ratina-img checkout-img-foot" />
+                </div>
+              </div>
+          </div>
+        {% else %}
+          <div class="{{ second_block }}">
+              <div class="one-sixth left">&nbsp;</div>
+              <div class="five-sixths left">
+                <div class="ff-checkout">
+                  <h3 class="with-lock-bg">{{ settings.checkout_box_heading_text }}</h3>
+                  <p style="margin-bottom: 5px;">{{ settings.checkout_box_info_text }}</p>
+                  {% include 'checkout-icons' %}
+                </div>
+              </div>
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+    
+  </div>
+{% endif %}
+	<footer class="container-fluid">
+      {% if settings.footer_second_row_display %}
+		<div class="row footer">
+			<div class="container">
+				<div class="col-md-4 equal">
+                  {% if settings.newslatter_form_show %}
+                    <div class="footer-newsletter">
+                      <h3>{{ settings.newslatter_heading }}</h3>
+                      {% if settings.newslatter_type == "mailchimp" %}
+                        <form action="{{ settings.newslatter_mailchimp_url }}" method="post" id="mc-embedded-subscribe-form" class="contact-form mailing-form" name="mc-embedded-subscribe-form" target="_blank">
+                          <div class="form-group clearfix">
+                            <input required type="email" placeholder="{{ 'general.newsletter_form.newsletter_email' | t }}" name="EMAIL" id="contact_email"  class="form-ccontrol newsletter" aria-label="{{ 'general.newsletter_form.newsletter_email' | t }}" autocorrect="off" autocapitalize="off">
+                            <button type="submit" class="btan btn-success">{{ settings.newslatter_btn_text }}</button>
+                          </div>
+                        </form>
+                      {% elsif settings.newslatter_type == "klaviyo" %}
+                        {% include 'klaviyo' %}
+                      {% else %}
+                        {% form 'customer' %}
+                          {{ form.errors | default_errors }}
+                          {% if form.posted_successfully? %}
+                            <div class='coupon-code'>
+                              <div class='w70'><p class='thank-msg'> {{ settings.newslatter_coupan }} </p>
+                                {% if settings.coupan != '' %}  
+                                <p class='coupon-text'>Here is your Coupon Code:<input type="text" value="{{ settings.coupan }}" id="coupan_code"></p>
+                                {% endif %}
+                              </div>
+                              {% if settings.coupan != '' %} 
+                              <div class='w30'><p class='save-txt'>Save 10%</p><p class='copy-div'><span class="button_text">copy code</span></p></div>
+                              {% endif %} 
+                            </div>
+                          {% else %}
+                            <div class="form-group clearfix">
+                              <input required type="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter_form.newsletter_email' | t }}" name="contact[email]" id="Email" class="form-ccontrol newsletter"  aria-label="{{ 'general.newsletter_form.newsletter_email' | t }}" autocorrect="off" autocapitalize="off">
+                              <input type="hidden" name="contact[tags]" value="newsletter">
+                              <button type="submit" name="ft" class="btan btn-success">{{ settings.newslatter_btn_text }}</button>
+                            </div>  
+                          {% endif %}
+                        {% endform %}
+                      {% endif %}
+                      {% if settings.termscheck %}
+                        <p class="checktext"><label for="footercheck"><input type="checkbox" id="footercheck"> {{ settings.termstext }} <a target="_blank" href="{{ settings.termstextlink }}">{{ settings.termslinktext }}</a></label></p>
+                        <script>
+                          $('body').on('click', '[name="ft"]', function() {
+                            if ($('#footercheck').is(':checked')) {
+                              $(this).submit();
+                            } else {
+                              alert("{{ settings.termstext_warning }}");
+                               return false;
+                            }
+                          });
+                        </script>
+                      {% endif %}
+                      <p><i>{{ settings.newslatter_text }}</i></p>
+					</div>
+                  {% endif %}
+				</div>
+				<div class="col-md-4 equal footer_link">
+					<div class=" ">
+                      
+						<div class="clearfix">
+							<ul >
+							 {% for link in linklists[settings.footer_linklist].links %}
+                              
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                              
+          {% endfor %}
+						</ul>
+<!-- 						<ul class="clearfix">
+								 {% for link in linklists[settings.footer_linklist].links %}
+                              
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                              
+          {% endfor %}
+						</ul> -->
+						</div>
+                    
+					</div>
+				</div>
+				<div class="col-md-4 equal">
+					<div class="footer_contact fourthcol">
+                       {% if settings.enable_header_contact %}
+						<h3>{{ settings.header_question_line }}</h3>
+						<h5><a href="tel:{{ settings.header_phone }}">
+                          
+                          {% if settings.usecustomphoneiconforfooter  %}
+                          <img src="{{'question-icon-footer.png' | asset_url}}" style="width:20px;position: relative;
+    top: -3px;">
+                          {% else %}
+                          <span class="fa fa-phone"></span>
+                          {% endif %}
+                          {{ settings.header_phone }} </a></h5>
+						<p>{{ settings.header_time }}</p>
+                      {% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+      {% endif %}
+		<div class="row footer_bottom">
+			<div class="container">
+				<div class="col-sm-4">
+				<p>&copy; {{ "now" | date: "%Y" }} <a style="color:{{ settings.footer_copyright_font_color }}" href="/">{{ shop.name }}</a>. {{ 'layout.footer.copyright' | t }}</p>
+			</div>
+			<div class="col-sm-4 text-center">
+              
+				<p>  <a href="{{ 'layout.footer.powered_by_link' | t }}">{{ 'layout.footer.powered_by' | t }}</a></p>
+               
+			</div>
+			<div class="col-sm-4">
+				<ul class="socila-icon">
+					 {% include 'social-icons' %}
+
+				</ul>
+			</div>
+			</div>
+
+		</div>
+	</footer>
+<script>
+$( document ).ready(function() {
+	if ($("header .sticky_bar.large--hide").length > 0) {
+		$(".main-content").addClass("main-content-space");
+	}
+});
+</script>

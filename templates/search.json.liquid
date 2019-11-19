@@ -1,0 +1,27 @@
+{%- layout none -%}
+{% assign count = 0 %}
+{%- capture results -%}
+{%- for item in search.results -%}
+  {% assign hideupsell = false %} 
+  {%- for tag in item.tags -%}
+    {% if tag == "hideupsell" %}
+      {% assign hideupsell = true %}
+      {% break %}
+    {% endif %}
+  {%- endfor -%}
+{% if  hideupsell == false %}
+{% assign count = count | plus: 1 %}
+{ 
+"title"    : {{ item.title | json }},
+"price"    : {{ item.price | money | json }},
+"url"      : {{ item.url | within: item.collections.last | json }},
+"thumbnail": {% if item.object_type == 'product' %}{{ item.featured_image.src | product_img_url: 'thumb' | json }}{% else %}{{ 'news.png' | asset_url | json }}{% endif %}
+}
+{%- unless forloop.last -%},{%- endunless -%}
+{% endif %}
+{%- endfor -%}
+{%- endcapture -%}
+{
+"results_count": {{ count }},
+"results": [{{ results }}]
+}

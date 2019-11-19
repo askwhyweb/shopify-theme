@@ -1,0 +1,158 @@
+
+
+<div class="wrapper header-space"></div>
+  <div class="container">
+  {% include 'breadcrumb' %}
+  {% if search.results_count <= 0 %}
+
+    <div class="grid page--search">
+      <div class="grid__item large--one-whole">
+        <h1 class="main-heading--search">{{ 'general.search.heading' | t }}</h1>
+        {% if settings['search_page'] != "" %}
+          <div class="grid">
+            <div class="grid__item large--one-whole">
+              <div class="page--header">
+                <h3>{{ pages[settings['search_page']].title }}</h3>
+              </div>
+            </div>
+            <div class="grid__item large--one-whole">
+              {{ pages[settings['search_page']].content }}
+            </div>
+          </div>
+        {% else %}
+          <div class="grid">
+            <div class="grid__item large--one-whole">
+              <div class="page--header">
+                <h3>
+                  {% if settings['search_page_title'] != "" %}
+                    {{ settings['search_page_title'] }}
+                  {% else %}
+                    {{ 'general.search.title' | t }}
+                  {% endif %}
+                </h3>
+              </div>
+              {% if settings['search_page_sub_title'] != "" %}
+                <div class="page--subheader">
+                  <h4>{{ settings['search_page_sub_title'] }}</h4>
+                </div>
+              {% endif %}
+            </div>
+            <div class="grid__item large--one-whole">
+              <ul class="ul--search">
+                {% if settings.display_search_search_form %}
+                  <li>
+                    <div class="help--title"><span>1</span> {% if settings.search_form_head_text_search != "" %} {{ settings.search_form_head_text_search }} {% else %}<strong>{{ 'general.search.search_form_heading_before' | t }}</strong> {{ 'general.search.search_form_heading_after' | t }}{% endif %}</div>
+                    <div class="help--search--form search_panel">
+                      {% include 'search-bar' %}
+                    </div>
+                  </li>   
+                {% endif %}
+                <li>
+                  <div class="help--title">
+                    {% if settings.display_search_search_form %}
+                      <span>2</span> 
+                    {% else %}
+                      <span>1</span> 
+                    {% endif %}
+                    {% if settings.search_help_text_url_type != "" %}
+                      {{ settings.search_help_text_url_type }}
+                    {% else %}
+                      <strong>{{ 'general.search.help_text_before' | t }}</strong> {{ 'general.search.help_text_after' | t }}
+                    {% endif %}
+                  </div>
+                </li>
+                <li>
+                  <div class="help--title">
+                    {% if settings.display_search_search_form %}
+                      <span>3</span> 
+                    {% else %}
+                      <span>2</span> 
+                    {% endif %}
+                    {% if settings.search_help_text_speak != "" %}
+                      {{ settings.search_help_text_speak }}
+                    {% else %}
+                      <strong>{{ 'general.search.speak_text_before' | t }}</strong> {{ 'general.search.speak_text_after' | t }}
+                    {% endif %}
+                  </div>
+                  {% if settings.display_search_speak_image %}
+                    <div class="speak--image--search">
+                      <p>
+                        <a href="{{ settings.search_speak_to_image_link }}">
+                          <img alt="chat to Lisa" src="{{ 'search_speak_to_image.jpg' | asset_url }}" title="">
+                        </a>
+                      </p>
+                    </div>
+                  {% endif %}
+                </li>
+                {% if settings.display_search_collections %}
+                <li>
+                  <div class="help--title">
+                    {% if settings.display_search_search_form %}
+                      <span>4</span> 
+                    {% else %}
+                      <span>3</span> 
+                    {% endif %}<strong>{{ 'general.search.search_collection_text' | t }}</strong>:
+                  </div>
+                  <div class="help--collections--search">
+                    {% if collections.size > 0 %}
+                      <div class="grid">
+                      {% for collection in collections %}
+                        <div class="grid__item large--one-quarter medium--one-half">
+                          <a href="{{ collection.url }}">
+                            {% if collection.image %}
+                              {{ collection.image.src | collection_img_url: 'grande' | img_tag: collection_title }}
+                            {% else %}
+                              {{ collection.products.first.featured_image | product_img_url: 'grande' | img_tag: collection_title }}
+                            {% endif %}
+                          </a>
+                          <div class="collection--title">
+                            <a href="{{ collection.url }}"><h5>{{ collection.title }}</h5></a>
+                          </div>
+                        </div>
+                        {% cycle '','','','</div><div class="grid">' %}
+                      {% endfor %}
+                      </div>
+                    {% else %}
+                      <p>{{ 'general.search.no_collection_text' | t }}</p>
+                    {% endif %}
+                  </div>
+                </li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% else %}
+  
+
+  	<div class="page--search">
+      {% paginate search.results by 20 %}
+      	{% assign type = "s" %}
+      	<div class="grid">
+          {% for product in search.results %}
+          
+        {% assign hideupsell = false %} 
+        {% for tag in product.tags %}
+        {% if tag == "hideupsell" %}{% assign hideupsell = true %}
+        {% break %}
+        {% endif %}
+        {% endfor %}
+       {% if  hideupsell == false %} 
+            {% include 'product-grid-item' with type %}
+            {% cycle '','','','</div><div class="grid">' %}
+          {% endif %}
+          {% endfor %}
+      	</div>
+      	{% if paginate.pages > 1 %}
+          <hr>
+          <div class="pagination">
+            {{ paginate | default_pagination | replace: '&laquo; Previous', '<i class="fa fa-angle-left"></i>' | replace: 'Next &raquo;', '<i class="fa fa-angle-right"></i>' }}
+          </div>
+        {% endif %}
+      {% endpaginate %}
+  	</div>
+    
+  {% endif %}
+	</div>
